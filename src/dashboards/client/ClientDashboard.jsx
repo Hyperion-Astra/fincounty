@@ -1,5 +1,6 @@
 // src/dashboards/client/ClientDashboard.js
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { db } from "../../firebase";
 import { doc, getDoc, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 import { useAuth } from "../../context/AuthContext";
@@ -13,6 +14,7 @@ export default function ClientDashboard() {
   const [loan, setLoan] = useState(0);
   const [transactions, setTransactions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     async function loadDashboard() {
@@ -77,7 +79,8 @@ export default function ClientDashboard() {
       <div className="quick-actions">
   <button onClick={() => navigate("/dashboard/transfer")}>Transfer Money</button>
   <button onClick={() => navigate("/dashboard/deposit")}>Deposit</button>
-  <button onClick={() => navigate("/dashboard/loan")}>Apply for Loan</button>
+  <button onClick={() => navigate("/dashboard/apply-loan")}>Apply for Loan</button>
+    <button onClick={() => navigate("/dashboard/pay-bills")}>Pay Utility Bills</button>
 </div>
 
       {/* Recent Transactions */}

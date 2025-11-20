@@ -1,64 +1,135 @@
-// src/dashboards/client/Transfer.jsx
+// src/dashboards/client/pages/Transfer.jsx
 import React, { useState } from "react";
-import "./Transfer.css";
+import { submitTransfer } from "../../../services/TransferService.jsx";
+import { useAuth } from "../../../context/AuthContext.jsx";
+import "./Transfer.css"
 
-export default function Transfer() {
-  const [amount, setAmount] = useState("");
-  const [recipient, setRecipient] = useState("");
+const Transfer = () => {
+  const { currentUser } = useAuth();
+
+  const [form, setForm] = useState({
+    recipientName: "",
+    recipientBank: "",
+    accountNumber: "",
+    swift: "",
+    routing: "",
+    type: "local",
+    reason: "",
+    amount: "",
+  });
+
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [msg, setMsg] = useState("");
 
-  async function handleTransfer(e) {
+  const update = (key, value) => {
+    setForm({ ...form, [key]: value });
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage("");
 
-    if (!recipient || !amount || Number(amount) <= 0) {
-      setMessage("Enter valid recipient and amount.");
-      setLoading(false);
+    if (!form.amount) {
+      setMsg("Enter amount.");
       return;
     }
 
+    setLoading(true);
+    setMsg("");
+
     try {
-      // TODO: Call transfer service here
-      setMessage(`$${amount} transfer to ${recipient} submitted successfully.`);
-      setAmount("");
-      setRecipient("");
+      await submitTransfer({
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        ...form,
+      });
+
+      setMsg("Transfer request sent. Pending approval.");
+      setForm({
+        recipientName: "",
+        recipientBank: "",
+        accountNumber: "",
+        swift: "",
+        routing: "",
+        type: "local",
+        reason: "",
+        amount: "",
+      });
     } catch (err) {
-      console.error(err);
-      setMessage("Error processing transfer.");
+      setMsg("Error: " + err.message);
     }
 
     setLoading(false);
-  }
+  };
 
   return (
-    <div className="transfer-page">
-      <h2>Transfer Money</h2>
+    <div className="form-page">
+      <h2>Send Money</h2>
 
-      <form className="transfer-form" onSubmit={handleTransfer}>
-        <label>Recipient Account</label>
+      <form onSubmit={handleSubmit}>
+        <label>Recipient Name</label>
         <input
-          type="text"
-          value={recipient}
-          onChange={(e) => setRecipient(e.target.value)}
-          placeholder="Enter recipient account"
+          value={form.recipientName}
+          onChange={(e) => update("recipientName", e.target.value)}
+          required
+        />
+
+        <label>Bank</label>
+        <input
+          value={form.recipientBank}
+          onChange={(e) => update("recipientBank", e.target.value)}
+          required
+        />
+
+        <label>Account Number</label>
+        <input
+          value={form.accountNumber}
+          onChange={(e) => update("accountNumber", e.target.value)}
+          required
+        />
+
+        <label>SWIFT</label>
+        <input
+          value={form.swift}
+          onChange={(e) => update("swift", e.target.value)}
+        />
+
+        <label>Routing Number</label>
+        <input
+          value={form.routing}
+          onChange={(e) => update("routing", e.target.value)}
+        />
+
+        <label>Transfer Type</label>
+        <select
+          value={form.type}
+          onChange={(e) => update("type", e.target.value)}
+        >
+          <option value="local">Local</option>
+          <option value="international">International</option>
+        </select>
+
+        <label>Reason</label>
+        <input
+          value={form.reason}
+          onChange={(e) => update("reason", e.target.value)}
         />
 
         <label>Amount</label>
         <input
           type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          placeholder="Enter amount"
+          value={form.amount}
+          onChange={(e) => update("amount", e.target.value)}
+          required
         />
 
         <button type="submit" disabled={loading}>
-          {loading ? "Processing..." : "Send Money"}
+          {loading ? "Sending..." : "Send Money"}
         </button>
       </form>
 
-      {message && <p className="transfer-msg">{message}</p>}
+      {msg && <p className="form-msg">{msg}</p>}
     </div>
   );
-}
+};
+
+export default Transfer;

@@ -1,54 +1,91 @@
-// src/dashboards/client/Deposit.jsx
+// src/dashboards/client/pages/Deposit.jsx
 import React, { useState } from "react";
-import "./Deposit.css";
+import { submitDeposit } from "../../../services/DepositService.jsx";
+import { useAuth } from "../../../context/AuthContext.jsx";
+import "./Transfer.css"
 
-export default function Deposit() {
+const Deposit = () => {
+  const { currentUser } = useAuth();
+
   const [amount, setAmount] = useState("");
+  const [method, setMethod] = useState("bank");
+  const [proofUrl, setProofUrl] = useState("");
+  const [note, setNote] = useState("");
+
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
+  const [msg, setMsg] = useState("");
 
-  async function handleDeposit(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMessage("");
 
-    if (!amount || Number(amount) <= 0) {
-      setMessage("Enter a valid amount.");
-      setLoading(false);
+    if (!amount) {
+      setMsg("Enter an amount.");
       return;
     }
 
+    setLoading(true);
+    setMsg("");
+
     try {
-      // TODO: Call deposit service here
-      setMessage(`$${amount} deposit submitted successfully.`);
+      await submitDeposit({
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        amount,
+        method,
+        proofUrl,
+        note,
+      });
+
+      setMsg("Deposit submitted successfully! Pending approval.");
       setAmount("");
+      setNote("");
+      setProofUrl("");
     } catch (err) {
-      console.error(err);
-      setMessage("Error processing deposit.");
+      setMsg("Error submitting deposit: " + err.message);
     }
 
     setLoading(false);
-  }
+  };
 
   return (
-    <div className="deposit-page">
-      <h2>Deposit Funds</h2>
+    <div className="form-page">
+      <h2>Make a Deposit</h2>
 
-      <form className="deposit-form" onSubmit={handleDeposit}>
+      <form onSubmit={handleSubmit}>
         <label>Amount</label>
         <input
           type="number"
           value={amount}
           onChange={(e) => setAmount(e.target.value)}
-          placeholder="Enter deposit amount"
+          required
         />
 
+        <label>Payment Method</label>
+        <select value={method} onChange={(e) => setMethod(e.target.value)}>
+          <option value="bank">Bank Transfer</option>
+          <option value="card">Card</option>
+          <option value="crypto">Crypto</option>
+        </select>
+
+        <label>Proof Image (URL)</label>
+        <input
+          type="text"
+          value={proofUrl}
+          onChange={(e) => setProofUrl(e.target.value)}
+          placeholder="Optional"
+        />
+
+        <label>Note (optional)</label>
+        <textarea value={note} onChange={(e) => setNote(e.target.value)} />
+
         <button type="submit" disabled={loading}>
-          {loading ? "Processing..." : "Deposit"}
+          {loading ? "Submitting..." : "Submit Deposit"}
         </button>
       </form>
 
-      {message && <p className="deposit-msg">{message}</p>}
+      {msg && <p className="form-msg">{msg}</p>}
     </div>
   );
-}
+};
+
+export default Deposit;

@@ -1,94 +1,123 @@
-// src/dashboards/client/LoanApply.jsx
+// src/dashboards/client/pages/LoanApply.jsx
 import React, { useState } from "react";
-import { useAuth } from "../../context/AuthContext";
-import { db } from "../../firebase";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import { submitLoan } from "../../../services/LoanService.jsx";
+import { useAuth } from "../../../context/AuthContext.jsx";
+import "./Transfer.css"
 
-/**
- * Simple loan application form.
- * - amount: requested loan
- * - term: loan term in months/years (string)
- * - purpose: short text
- */
-export default function LoanApply({ onApplied }) {
-  const { user } = useAuth();
-  const [amount, setAmount] = useState("");
-  const [term, setTerm] = useState("");
-  const [purpose, setPurpose] = useState("");
+const LoanApply = () => {
+  const { currentUser } = useAuth();
+
+  const [form, setForm] = useState({
+    loanType: "",
+    amount: "",
+    durationMonths: "",
+    income: "",
+    employment: "",
+    documentUrl: "",
+    note: "",
+  });
+
   const [loading, setLoading] = useState(false);
+  const [msg, setMsg] = useState("");
 
-  async function submitHandler(e) {
+  const update = (key, value) => setForm({ ...form, [key]: value });
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // basic validation
-    const amt = Number(amount);
-    if (!user) return alert("You must be logged in.");
-    if (!amt || amt <= 0) return alert("Enter a valid loan amount.");
-    if (!term) return alert("Enter a loan term.");
-    if (!purpose) return alert("Enter the purpose of the loan.");
+    if (!form.amount || !form.loanType) {
+      setMsg("Fill all required fields.");
+      return;
+    }
 
     setLoading(true);
+    setMsg("");
+
     try {
-      await addDoc(collection(db, "loans"), {
-        userId: user.uid,
-        amount: amt,
-        term,
-        purpose,
-        status: "pending",
-        createdAt: serverTimestamp(),
+      await submitLoan({
+        userId: currentUser.uid,
+        userEmail: currentUser.email,
+        ...form,
       });
 
-      setAmount("");
-      setTerm("");
-      setPurpose("");
-      alert("Loan application submitted. Status: pending.");
-      if (typeof onApplied === "function") onApplied();
+      setMsg("Loan request submitted! Await approval.");
+      setForm({
+        loanType: "",
+        amount: "",
+        durationMonths: "",
+        income: "",
+        employment: "",
+        documentUrl: "",
+        note: "",
+      });
     } catch (err) {
-      console.error("apply loan error", err);
-      alert("Failed to submit application.");
-    } finally {
-      setLoading(false);
+      setMsg("Error: " + err.message);
     }
-  }
+
+    setLoading(false);
+  };
 
   return (
-    <div className="client-card">
-      <h2>Apply for a Loan</h2>
+    <div className="form-page">
+      <h2>Loan Application</h2>
 
-      <form onSubmit={submitHandler} style={{ maxWidth: 560 }}>
+      <form onSubmit={handleSubmit}>
+        <label>Loan Type</label>
+        <input
+          value={form.loanType}
+          onChange={(e) => update("loanType", e.target.value)}
+          required
+        />
+
         <label>Amount</label>
         <input
           type="number"
-          placeholder="Enter amount (e.g., 500000)"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
+          value={form.amount}
+          onChange={(e) => update("amount", e.target.value)}
           required
         />
 
-        <label>Term</label>
+        <label>Duration (Months)</label>
         <input
-          type="text"
-          placeholder="e.g., 12 months"
-          value={term}
-          onChange={(e) => setTerm(e.target.value)}
+          type="number"
+          value={form.durationMonths}
+          onChange={(e) => update("durationMonths", e.target.value)}
           required
         />
 
-        <label>Purpose</label>
+        <label>Monthly Income</label>
+        <input
+          type="number"
+          value={form.income}
+          onChange={(e) => update("income", e.target.value)}
+        />
+
+        <label>Employment Status</label>
+        <input
+          value={form.employment}
+          onChange={(e) => update("employment", e.target.value)}
+        />
+
+        <label>Document URL (Optional)</label>
+        <input
+          value={form.documentUrl}
+          onChange={(e) => update("documentUrl", e.target.value)}
+        />
+
+        <label>Note</label>
         <textarea
-          rows="4"
-          placeholder="Brief description of the purpose"
-          value={purpose}
-          onChange={(e) => setPurpose(e.target.value)}
-          required
+          value={form.note}
+          onChange={(e) => update("note", e.target.value)}
         />
 
-        <div style={{ marginTop: 12 }}>
-          <button className="action-btn" disabled={loading}>
-            {loading ? "Submitting…" : "Submit Application"}
-          </button>
-        </div>
+        <button type="submit" disabled={loading}>
+          {loading ? "Submitting..." : "Apply for Loan"}
+        </button>
       </form>
+
+      {msg && <p className="form-msg">{msg}</p>}
     </div>
   );
-}
+};
+
+export default LoanApply;

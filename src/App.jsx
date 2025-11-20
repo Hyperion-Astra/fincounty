@@ -22,6 +22,7 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import Transfer from "./dashboards/client/Transfer";
 import Deposit from "./dashboards/client/Deposit";
 import LoanApply from "./dashboards/client/LoanApply";
+import PayBills from "./dashboards/client/PayBills";
 
 
 // Personal
@@ -145,6 +146,7 @@ function AppContent() {
           <Route path="loans" element={<ClientLoans />} />
           <Route path="transfer" element={<Transfer />} />
           <Route path="apply-loan" element={<LoanApply />} />
+          <Route path="pay-bills" element={<PayBills />} />
           <Route path="deposit" element={<Deposit />} />
           <Route path="withdraw" element={<Withdraw />} />
           <Route path="withdraw-history" element={<WithdrawHistory />} />
