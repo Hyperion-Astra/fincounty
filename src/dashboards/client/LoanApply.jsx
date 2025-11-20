@@ -1,7 +1,7 @@
 // src/dashboards/client/pages/LoanApply.jsx
 import React, { useState } from "react";
-import { submitLoan } from "../../../services/LoanService.jsx";
-import { useAuth } from "../../../context/AuthContext.jsx";
+import { submitLoan } from "../../services/LoanService.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 import "./Transfer.css"
 
 const LoanApply = () => {
