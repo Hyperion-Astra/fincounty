@@ -1,7 +1,6 @@
-// src/dashboards/client/pages/Deposit.jsx
 import React, { useState } from "react";
-import { submitDeposit } from "../../../services/DepositService.jsx";
-import { useAuth } from "../../../context/AuthContext.jsx";
+import { submitDeposit } from "../../services/DepositService.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 import "./Transfer.css"
 
 const Deposit = () => {

@@ -1,7 +1,6 @@
-// src/dashboards/client/pages/Transfer.jsx
 import React, { useState } from "react";
-import { submitTransfer } from "../../../services/TransferService.jsx";
-import { useAuth } from "../../../context/AuthContext.jsx";
+import { submitTransfer } from "../../services/TransferService.jsx";
+import { useAuth } from "../../context/AuthContext.jsx";
 import "./Transfer.css"
 
 const Transfer = () => {

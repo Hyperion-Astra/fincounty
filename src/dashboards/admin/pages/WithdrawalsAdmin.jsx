@@ -1,53 +1,46 @@
-// src/dashboards/admin/pages/WithdrawalsAdmin.js
 import React, { useEffect, useState } from "react";
-import { 
+import {
   updateWithdrawalStatus,
+  getAllWithdrawals,
   approveWithdrawal,
   rejectWithdrawal,
-  getAllWithdrawals
 } from "../../../services/WithdrawalService.jsx";
 
-const WithdrawalsAdmin = () => {
+export default function WithdrawalsAdmin() {
   const [withdrawals, setWithdrawals] = useState([]);
+  const [selected, setSelected] = useState(null); // modal details
 
   useEffect(() => {
-    getAllWithdrawals().then(setWithdrawals);
+    load();
   }, []);
 
-  const handleApprove = async (w) => {
-    const success = await approveWithdrawal(w);
-    if (!success) return alert("Error approving withdrawal");
+  async function load() {
+    const data = await getAllWithdrawals();
+    setWithdrawals(data);
+  }
 
-    setWithdrawals((prev) =>
-      prev.map((x) =>
-        x.id === w.id ? { ...x, status: "approved" } : x
-      )
-    );
-  };
+  async function handleApprove(w) {
+    await approveWithdrawal(w.id, w.userId, w.amount);
+    load();
+  }
 
-  const handleReject = async (w) => {
-    await rejectWithdrawal(w.id);
-    setWithdrawals((prev) =>
-      prev.map((x) =>
-        x.id === w.id ? { ...x, status: "rejected" } : x
-      )
-    );
-  };
+  async function handleReject(id) {
+    await rejectWithdrawal(id);
+    load();
+  }
 
   return (
     <div className="admin-page">
       <h2 className="dashboard-title">Withdrawal Requests</h2>
 
-      <table className="admin-table withdrawals-table">
+      <table className="admin-table">
         <thead>
           <tr>
             <th>User</th>
             <th>Amount</th>
             <th>Method</th>
-            <th>Account Details</th>
-            <th>Note</th>
             <th>Status</th>
-            <th>Submitted</th>
+            <th>Details</th>
             <th>Action</th>
           </tr>
         </thead>
@@ -55,71 +48,79 @@ const WithdrawalsAdmin = () => {
         <tbody>
           {withdrawals.map((w) => (
             <tr key={w.id}>
-              <td>{w.userName || w.userId}</td>
-
-              <td>${w.amount.toLocaleString()}</td>
-
-              <td style={{ textTransform: "capitalize" }}>
-                {w.method}
-              </td>
+              <td>{w.userId}</td>
+              <td>${w.amount?.toLocaleString()}</td>
+              <td>{w.method}</td>
+              <td>{w.status}</td>
 
               <td>
-                <div>
-                  <strong>{w.accountName}</strong> <br />
-                  {w.accountNumber}
-                </div>
-
-                {w.method === "bank" && (
-                  <div className="bank-info">
-                    Bank: {w.bankName} <br />
-                    SWIFT/Routing: {w.swiftCode || "N/A"}
-                  </div>
-                )}
-              </td>
-
-              <td>{w.note || "—"}</td>
-
-              <td>
-                <span
-                  className={`status-badge ${w.status.toLowerCase()}`}
+                <button
+                  className="btn-view"
+                  onClick={() => setSelected(w)}
                 >
-                  {w.status}
-                </span>
+                  View
+                </button>
               </td>
 
               <td>
-                {w.createdAt
-                  ? new Date(w.createdAt.seconds * 1000).toLocaleString()
-                  : "—"}
-              </td>
-
-              <td>
-                {w.status === "pending" ? (
+                {w.status === "pending" && (
                   <>
-                    <button 
-                      className="approve-btn"
+                    <button
+                      className="btn-approve"
                       onClick={() => handleApprove(w)}
                     >
                       Approve
                     </button>
 
                     <button
-                      className="reject-btn"
-                      onClick={() => handleReject(w)}
+                      className="btn-reject"
+                      onClick={() => handleReject(w.id)}
                     >
                       Reject
                     </button>
                   </>
-                ) : (
-                  <em>No action</em>
                 )}
               </td>
             </tr>
           ))}
         </tbody>
       </table>
+
+      {/* DETAILS MODAL */}
+      {selected && (
+        <div className="modal-overlay" onClick={() => setSelected(null)}>
+          <div
+            className="modal-box"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <h3>Withdrawal Details</h3>
+
+            <p><strong>User ID:</strong> {selected.userId}</p>
+            <p><strong>Amount:</strong> ${selected.amount?.toLocaleString()}</p>
+            <p><strong>Method:</strong> {selected.method}</p>
+
+            {selected.method === "bank" && (
+              <>
+                <p><strong>Bank Name:</strong> {selected.bankName}</p>
+                <p><strong>SWIFT / Routing:</strong> {selected.swiftCode}</p>
+              </>
+            )}
+
+            <p><strong>Account Name:</strong> {selected.accountName}</p>
+            <p><strong>Account Number:</strong> {selected.accountNumber}</p>
+
+            {selected.note && (
+              <p><strong>Note:</strong> {selected.note}</p>
+            )}
+
+            <p><strong>Status:</strong> {selected.status}</p>
+
+            <button className="modal-close" onClick={() => setSelected(null)}>
+              Close
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
-};
-
-export default WithdrawalsAdmin;
+}
