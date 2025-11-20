@@ -1,0 +1,95 @@
+/* src/dashboards/admin/admin.css */
+
+.admin-container {
+  padding: 40px;
+  font-family: "Poppins", sans-serif;
+}
+
+.admin-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #3b1e76;
+}
+
+.admin-subtitle {
+  margin-top: -10px;
+  color: #555;
+  margin-bottom: 30px;
+}
+
+.admin-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 20px;
+}
+
+.admin-card {
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+  border-left: 5px solid #6a3cbc;
+}
+
+.admin-card h3 {
+  margin: 0;
+  font-size: 17px;
+  color: #3b1e76;
+}
+
+.admin-card p {
+  font-size: 26px;
+  margin-top: 10px;
+  font-weight: 600;
+}
+
+.admin-card.pending {
+  border-left-color: #e67e22;
+}
+
+/* USERS TABLE */
+.admin-table {
+  margin-top: 40px;
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.07);
+}
+
+.admin-table-header,
+.admin-table-row {
+  display: grid;
+  grid-template-columns: 1.5fr 1.5fr 1fr 1fr;
+  padding: 18px 20px;
+}
+
+.admin-table-header {
+  background: #6a3cbc;
+  color: white;
+  font-weight: 600;
+}
+
+.admin-table-row:nth-child(even) {
+  background: #faf7ff;
+}
+
+.admin-input {
+  padding: 8px 10px;
+  border: 1px solid #d3c1f2;
+  border-radius: 8px;
+  width: 100%;
+}
+
+.admin-btn {
+  padding: 7px 15px;
+  border: none;
+  background: #6a3cbc;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.admin-btn.save {
+  background: #27ae60;
+}

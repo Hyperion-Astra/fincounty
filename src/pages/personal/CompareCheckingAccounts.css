@@ -1,0 +1,21 @@
+/* CompareCheckingAccounts.css */
+.pc-compare { font-family:var(--font-sans, Poppins, sans-serif); color:var(--text,#0b2545); background:var(--page-bg,#f6f7fb); }
+.pc-compare-hero { padding:56px 5%; text-align:center; background:transparent; }
+.pc-compare-hero h1 { font-size:2.2rem; margin-bottom:6px; }
+.pc-compare-hero p { color:#556777; margin:0; }
+
+.pc-container { max-width:1200px; margin:0 auto; }
+
+.pc-table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 10px 30px rgba(8,26,46,0.06); }
+.pc-table thead th { background:#f6f8fb; padding:14px 18px; text-align:left; font-weight:700; color:#0b2545; }
+.pc-table td { padding:14px 18px; border-top:1px solid #eef2f6; color:#465a6a; }
+
+.pc-compare-cta { margin-top:18px; display:flex; gap:12px; justify-content:center; padding:18px 0; }
+
+@media (max-width:900px) {
+  .pc-table thead { display:none; }
+  .pc-table, .pc-table tbody, .pc-table tr, .pc-table td { display:block; width:100%; }
+  .pc-table tr { margin-bottom:12px; }
+  .pc-table td { padding:8px 12px; }
+  .pc-table td:first-child { font-weight:700; color:#0b2545; }
+}

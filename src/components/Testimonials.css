@@ -1,0 +1,75 @@
+.ts-section {
+  width: 100%;
+  background: #f4f7fb;
+  padding: 80px 6%;
+}
+
+.ts-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.ts-heading {
+  font-size: 32px;
+  font-weight: 700;
+  color: #082a4a;
+  margin-bottom: 10px;
+}
+
+.ts-subtitle {
+  color: #475569;
+  max-width: 650px;
+  margin: 0 auto 45px;
+  font-size: 16px;
+}
+
+.ts-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.ts-card {
+  background: #ffffff;
+  padding: 32px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  text-align: left;
+  position: relative;
+}
+
+.ts-quote {
+  font-size: 16px;
+  color: #334155;
+  margin-bottom: 20px;
+  line-height: 1.55;
+}
+
+.ts-author {
+  display: flex;
+  flex-direction: column;
+}
+
+.ts-author strong {
+  color: #082a4a;
+  font-size: 15.5px;
+}
+
+.ts-author span {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .ts-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .ts-grid {
+    grid-template-columns: 1fr;
+  }
+}

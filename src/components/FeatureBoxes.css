@@ -1,0 +1,67 @@
+/* Clean 3-card feature section */
+
+.fb-section {
+  width: 100%;
+  padding: 60px 5%;
+  background: #f8fafc;
+  box-sizing: border-box;
+}
+
+.fb-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 28px;
+}
+
+.fb-card {
+  background: #ffffff;
+  padding: 32px 26px;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(25, 33, 55, 0.08);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  transition: all 0.25s ease;
+}
+
+.fb-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+.fb-title {
+  font-size: 22px;
+  font-weight: 700;
+  color: #082a4a;
+  margin-bottom: 10px;
+}
+
+.fb-text {
+  color: #475569;
+  margin-bottom: 14px;
+  font-size: 15.5px;
+  line-height: 1.45;
+}
+
+.fb-link {
+  font-weight: 600;
+  text-decoration: none;
+  color: #1a5ab3;
+  border-bottom: 2px solid transparent;
+  padding-bottom: 2px;
+}
+
+.fb-link:hover {
+  border-color: #1a5ab3;
+}
+
+/* Responsive */
+@media (max-width: 960px) {
+  .fb-container {
+    grid-template-columns: 1fr;
+  }
+
+  .fb-card {
+    padding: 28px 22px;
+  }
+}

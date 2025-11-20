@@ -1,0 +1,86 @@
+.bt-section {
+  width: 100%;
+  padding: 70px 6%;
+  background: #ffffff;
+}
+
+.bt-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.bt-heading {
+  font-size: 32px;
+  font-weight: 700;
+  color: #082a4a;
+  margin-bottom: 10px;
+}
+
+.bt-subtitle {
+  color: #475569;
+  margin-bottom: 40px;
+  font-size: 16px;
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.bt-grid {
+  display: grid;
+  gap: 26px;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+.bt-card {
+  background: #f8fafc;
+  padding: 28px 24px;
+  border-radius: 14px;
+  border: 1px solid rgba(0,0,0,0.06);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+  transition: all 0.25s ease;
+  text-align: left;
+}
+
+.bt-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 9px 24px rgba(0,0,0,0.12);
+}
+
+.bt-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #082a4a;
+  margin-bottom: 6px;
+}
+
+.bt-text {
+  color: #516174;
+  margin-bottom: 14px;
+  font-size: 15px;
+}
+
+.bt-link {
+  color: #1a5ab3;
+  text-decoration: none;
+  font-weight: 600;
+  border-bottom: 2px solid transparent;
+  transition: 0.25s ease;
+}
+
+.bt-link:hover {
+  border-color: #1a5ab3;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .bt-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 600px) {
+  .bt-grid {
+    grid-template-columns: 1fr;
+  }
+}

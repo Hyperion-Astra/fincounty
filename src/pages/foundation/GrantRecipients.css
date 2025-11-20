@@ -1,0 +1,75 @@
+.recipients-page {
+  padding-top: 120px;
+  background: #f7f8fa;
+}
+
+.recipients-hero {
+  background: #002044;
+  color: white;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.recipients-hero h1 {
+  font-size: 40px;
+  font-weight: 700;
+}
+
+.recipients-container {
+  max-width: 1100px;
+  margin: auto;
+  padding: 50px 20px;
+}
+
+.recipients-section {
+  margin-bottom: 45px;
+}
+
+.recipients-section h2 {
+  font-size: 26px;
+  color: #002044;
+  margin-bottom: 15px;
+}
+
+.recipients-section p {
+  font-size: 17px;
+  color: #444;
+  line-height: 1.7;
+}
+
+.recipients-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 25px;
+}
+
+.recipient-card {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 12px rgba(0,0,0,0.08);
+}
+
+.recipient-card h3 {
+  font-size: 20px;
+  margin-bottom: 12px;
+  color: #002044;
+}
+
+.recipient-card p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #555;
+}
+
+@media (max-width: 900px) {
+  .recipients-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+@media (max-width: 600px) {
+  .recipients-grid {
+    grid-template-columns: 1fr;
+  }
+}

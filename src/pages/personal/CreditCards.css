@@ -1,0 +1,7 @@
+/* CreditCards.css */
+.pc-cards { background:var(--page-bg,#f6f7fb); color:var(--text,#0b2545); font-family:var(--font-sans); }
+.pc-hero { padding:64px 5%; background:linear-gradient(180deg, rgba(10,30,60,0.85), rgba(10,30,60,0.6)); color:#fff; }
+.pc-section { padding:40px 5%; }
+.pc-cards-grid { display:grid; gap:18px; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); margin-top:18px; }
+.card-item { background:#fff;padding:20px;border-radius:12px;box-shadow:0 8px 24px rgba(8,26,46,0.06); }
+.pc-link { color:var(--primary,#0d6efd); text-decoration:none; font-weight:600; }

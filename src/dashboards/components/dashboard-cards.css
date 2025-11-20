@@ -1,0 +1,36 @@
+/* src/dashboard/components/dashboard-cards.css */
+
+.dash-card {
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 2px 10px rgba(0,0,0,0.05);
+  transition: 0.2s ease;
+}
+
+.dash-card:hover {
+  transform: translateY(-2px);
+}
+
+.dash-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.dash-card-title {
+  font-weight: 600;
+  color: #333;
+}
+
+.dash-card-icon {
+  font-size: 22px;
+  opacity: 0.7;
+}
+
+.dash-card-value {
+  margin-top: 10px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #063970;
+}

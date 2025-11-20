@@ -1,0 +1,15 @@
+/* src/dashboard/components/status-badge.css */
+
+.status-badge {
+  padding: 5px 12px;
+  font-size: 0.75rem;
+  border-radius: 20px;
+  font-weight: 600;
+  color: white;
+  text-transform: uppercase;
+}
+
+.status-badge.green { background: #2ecc71; }
+.status-badge.orange { background: #f39c12; }
+.status-badge.red { background: #e74c3c; }
+.status-badge.gray { background: #7f8c8d; }

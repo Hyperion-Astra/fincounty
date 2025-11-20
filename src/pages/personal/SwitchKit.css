@@ -1,0 +1,9 @@
+/* SwitchKit.css */
+.pc-switch { background:var(--page-bg,#f6f7fb); color:var(--text,#0b2545); font-family:var(--font-sans,Poppins, sans-serif); }
+.pc-switch-hero { padding:56px 5%; text-align:center; }
+.pc-switch-hero h1 { font-size:2.2rem; margin-bottom:6px; }
+.pc-section { padding:36px 5%; }
+.pc-steps { margin-top:18px; background:#fff; padding:20px; border-radius:10px; box-shadow:0 8px 24px rgba(8,26,46,0.06); }
+.pc-steps li { margin:12px 0; color:#344055; line-height:1.5; }
+.pc-switch-help { margin-top:18px; display:flex; gap:12px; align-items:center; }
+.pc-btn-primary { background:var(--primary,#0d6efd); color:#fff; padding:10px 16px; border-radius:8px; text-decoration:none; font-weight:600; }

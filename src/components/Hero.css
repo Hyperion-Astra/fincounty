@@ -1,0 +1,115 @@
+.hero-section {
+  width: 100%;
+  height: 620px; /* same height feel as FirstCountyBank */
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background Image */
+.hero-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-size: cover;
+  background-position: center top;
+  filter: brightness(0.78);
+}
+
+/* Gradient Overlay (same FCB style) */
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to right,
+    rgba(0, 0, 0, 0.45),
+    rgba(0, 0, 0, 0.05)
+  );
+}
+
+/* Content */
+.hero-content {
+  position: relative;
+  z-index: 3;
+  padding-left: 80px;
+  padding-top: 150px;
+  max-width: 650px;
+  color: white;
+}
+
+/* Headline */
+.hero-title {
+  font-size: 3rem;
+  line-height: 1.2;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+/* Underline bar (FCB style) */
+.hero-underline {
+  width: 70px;
+  height: 6px;
+  background: #1a5ab3; /* similar blue to FirstCountyBank */
+  border-radius: 4px;
+  margin-bottom: 22px;
+}
+
+/* Text */
+.hero-text {
+  font-size: 1.2rem;
+  max-width: 520px;
+  margin-bottom: 26px;
+  line-height: 1.5;
+  opacity: 0.95;
+}
+
+/* Button */
+.hero-btn {
+  padding: 14px 32px;
+  background: #1a5ab3;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.25s ease;
+}
+
+.hero-btn:hover {
+  background: #003f89;
+}
+
+/* ------------------------
+   RESPONSIVE
+------------------------- */
+@media (max-width: 900px) {
+  .hero-section {
+    height: auto;
+    padding: 60px 0;
+  }
+
+  .hero-content {
+    padding: 40px;
+    padding-top: 120px;
+  }
+
+  .hero-title {
+    font-size: 2.25rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .hero-title {
+    font-size: 2rem;
+  }
+
+  .hero-text {
+    font-size: 1rem;
+  }
+
+  .hero-content {
+    padding: 28px;
+  }
+}

@@ -1,0 +1,162 @@
+.mortgage-page {
+  width: 100%;
+  padding-top: 120px;
+  background: #f7f8fa;
+  padding-bottom: 60px;
+}
+
+.mortgage-hero {
+  background: url("/assets/mortgage-hero.jpg") center/cover no-repeat;
+  height: 330px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0 20px;
+  position: relative;
+}
+
+.mortgage-hero::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 32, 66, 0.55);
+}
+
+.mortgage-hero h1 {
+  position: relative;
+  color: white;
+  font-size: 40px;
+  font-weight: 700;
+  z-index: 2;
+  line-height: 1.2;
+}
+
+.mortgage-content {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 50px 20px;
+}
+
+.mortgage-content h2 {
+  font-size: 28px;
+  margin-bottom: 18px;
+  color: #002044;
+}
+
+.mortgage-content p {
+  font-size: 17px;
+  line-height: 1.7;
+  margin-bottom: 25px;
+  color: #444;
+}
+
+.mortgage-section {
+  margin-bottom: 60px;
+}
+
+.mortgage-section ul {
+  padding-left: 20px;
+  margin-top: 10px;
+}
+
+.mortgage-section ul li {
+  margin-bottom: 10px;
+  font-size: 16px;
+  color: #333;
+}
+
+/* --- Rates Table --- */
+
+.mortgage-rates-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 25px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.mortgage-rates-table th,
+.mortgage-rates-table td {
+  padding: 14px 18px;
+  border-bottom: 1px solid #e7e7e7;
+  text-align: left;
+}
+
+.mortgage-rates-table th {
+  background: #002044;
+  color: white;
+  font-weight: 600;
+}
+
+.mortgage-rates-table tr:hover {
+  background: #f2f6ff;
+}
+
+/* --- CTA Box --- */
+
+.mortgage-cta-box {
+  background: white;
+  padding: 30px 28px;
+  border-radius: 12px;
+  border-left: 5px solid #002044;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.08);
+  margin-top: 45px;
+}
+
+.mortgage-cta-box h3 {
+  font-size: 24px;
+  margin-bottom: 12px;
+  color: #002044;
+}
+
+.mortgage-cta-box p {
+  font-size: 16px;
+  margin-bottom: 18px;
+}
+
+.mortgage-cta-box button {
+  background: #002044;
+  color: white;
+  padding: 14px 26px;
+  border: none;
+  border-radius: 6px;
+  font-size: 17px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.mortgage-cta-box button:hover {
+  background: #014a88;
+}
+
+/* --- Responsive --- */
+
+@media (max-width: 900px) {
+  .mortgage-hero h1 {
+    font-size: 32px;
+  }
+}
+
+@media (max-width: 600px) {
+  .mortgage-hero {
+    height: 260px;
+  }
+
+  .mortgage-hero h1 {
+    font-size: 26px;
+  }
+
+  .mortgage-content h2 {
+    font-size: 22px;
+  }
+
+  .mortgage-cta-box {
+    padding: 22px;
+  }
+}

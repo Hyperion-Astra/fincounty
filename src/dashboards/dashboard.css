@@ -1,0 +1,297 @@
+/* ---------------------------------------------------------
+   GLOBAL DASHBOARD LAYOUT
+--------------------------------------------------------- */
+
+.dashboard-layout {
+  display: flex;
+  min-height: 100vh;
+  background: #f5f7fa;
+  font-family: "Poppins", sans-serif;
+}
+
+/* ---------------------------------------------------------
+   SIDEBAR
+--------------------------------------------------------- */
+
+.dashboard-sidebar {
+  width: 250px;
+  background: #111827; /* deep navy */
+  color: #fff;
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+}
+
+.sidebar-logo {
+  font-size: 22px;
+  font-weight: 700;
+  margin-bottom: 25px;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.sidebar-user {
+  margin-bottom: 25px;
+  font-size: 15px;
+  opacity: 0.8;
+}
+
+.sidebar-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.sidebar-link {
+  padding: 10px 14px;
+  border-radius: 10px;
+  text-decoration: none;
+  color: #cbd5e1;
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+
+.sidebar-link:hover {
+  background: rgba(255, 255, 255, 0.09);
+  color: #fff;
+}
+
+.sidebar-link.active {
+  background: #2563eb;
+  color: #fff;
+}
+
+/* ---------------------------------------------------------
+   MAIN CONTENT AREA
+--------------------------------------------------------- */
+
+.dashboard-content {
+  flex: 1;
+  padding: 30px;
+  overflow-y: auto;
+}
+
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.header-title {
+  font-size: 24px;
+  font-weight: 600;
+  color: #111827;
+}
+
+/* ---------------------------------------------------------
+   CARDS (Reusable)
+--------------------------------------------------------- */
+
+.client-card,
+.admin-card {
+  background: #fff;
+  padding: 25px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+}
+
+.client-card h2,
+.admin-card h2 {
+  margin-bottom: 18px;
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* ---------------------------------------------------------
+   BUTTONS
+--------------------------------------------------------- */
+
+.action-btn {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  font-size: 15px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.action-btn:hover {
+  background: #1e4fcf;
+}
+
+.action-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+}
+
+/* Danger */
+.action-btn.danger {
+  background: #dc2626;
+}
+
+.action-btn.danger:hover {
+  background: #b91c1c;
+}
+
+/* ---------------------------------------------------------
+   TABLES
+--------------------------------------------------------- */
+
+.transaction-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.transaction-table th,
+.transaction-table td {
+  padding: 14px 10px;
+  font-size: 14px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.transaction-table th {
+  background: #f1f5f9;
+  text-align: left;
+  font-weight: 600;
+}
+
+.transaction-table tr:hover td {
+  background: #f9fafb;
+}
+
+/* ---------------------------------------------------------
+   STATUS COLORS
+--------------------------------------------------------- */
+
+.status {
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+.status.pending {
+  color: #d97706;
+}
+
+.status.approved {
+  color: #16a34a;
+}
+
+.status.rejected {
+  color: #dc2626;
+}
+
+/* ---------------------------------------------------------
+   FORMS
+--------------------------------------------------------- */
+
+form label {
+  font-weight: 600;
+  font-size: 14px;
+  margin-bottom: 5px;
+  display: block;
+}
+
+form input,
+form textarea,
+form select {
+  width: 100%;
+  padding: 12px;
+  font-size: 14px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  border: 1px solid #d1d5db;
+  outline: none;
+  transition: border 0.2s;
+  background: #fff;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+  border-color: #2563eb;
+}
+
+/* ---------------------------------------------------------
+   WALLET CARD
+--------------------------------------------------------- */
+
+.wallet-balance-card {
+  background: linear-gradient(145deg, #2563eb, #1e40af);
+  color: #fff;
+  padding: 25px;
+  border-radius: 16px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 20px rgba(37, 99, 235, 0.4);
+}
+
+.wallet-balance-label {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+.wallet-balance-amount {
+  margin-top: 8px;
+  font-size: 32px;
+  font-weight: 700;
+}
+
+/* ---------------------------------------------------------
+   EMPTY STATE
+--------------------------------------------------------- */
+
+.empty-state {
+  text-align: center;
+  padding: 30px;
+  border-radius: 16px;
+  background: #f9fafb;
+  color: #6b7280;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+/* ---------------------------------------------------------
+   MOBILE RESPONSIVE
+--------------------------------------------------------- */
+
+@media (max-width: 960px) {
+  .dashboard-layout {
+    flex-direction: column;
+  }
+
+  .dashboard-sidebar {
+    width: 100%;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px 15px;
+    gap: 10px;
+  }
+
+  .sidebar-logo {
+    display: none;
+  }
+
+  .sidebar-nav {
+    flex-direction: row;
+    gap: 12px;
+    width: 100%;
+  }
+
+  .dashboard-content {
+    padding: 20px;
+  }
+
+  .transaction-table th,
+  .transaction-table td {
+    padding: 10px 6px;
+    font-size: 13px;
+  }
+
+  .wallet-balance-amount {
+    font-size: 26px;
+  }
+}

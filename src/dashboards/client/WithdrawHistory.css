@@ -1,0 +1,63 @@
+/* src/dashboard/client/WithdrawHistory.css */
+
+.withdraw-history-page {
+  background: #ffffff;
+  padding: 30px;
+  border-radius: 14px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  animation: fadeIn .3s ease;
+}
+
+.withdraw-history-page h2 {
+  font-size: 1.6rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  color: #1e4060;
+}
+
+.withdraw-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+.withdraw-table th,
+.withdraw-table td {
+  padding: 12px 14px;
+  font-size: 0.95rem;
+  color: #34495e;
+  border-bottom: 1px solid #e5eaf0;
+}
+
+.withdraw-table th {
+  font-weight: 600;
+  background: #f7f9fc;
+  color: #1e4060;
+}
+
+.status {
+  font-weight: 600;
+}
+
+.status.pending {
+  color: #d97706;
+}
+
+.status.approved {
+  color: #15803d;
+}
+
+.status.rejected {
+  color: #b91c1c;
+}
+
+.empty {
+  text-align: center;
+  padding: 20px;
+  color: #64748b;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}

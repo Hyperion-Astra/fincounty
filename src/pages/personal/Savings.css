@@ -1,0 +1,9 @@
+/* Savings.css */
+.pc-savings { background:var(--page-bg,#f6f7fb); color:var(--text,#0b2545); font-family:var(--font-sans); }
+.pc-hero { padding:72px 5%; background:linear-gradient(180deg, rgba(10,30,60,0.85), rgba(10,30,60,0.6)); color:#fff; }
+.pc-hero-inner h1 { font-size:2.4rem; }
+.pc-section { padding:48px 5%; }
+.pc-savings-grid { display:grid; gap:18px; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top:20px; }
+.s-card { background:#fff;padding:22px;border-radius:12px;box-shadow:0 8px 20px rgba(8,26,46,0.06); }
+.s-card h3 { margin:0 0 8px; }
+.pc-link { color:var(--primary,#0d6efd); font-weight:600; text-decoration:none; }

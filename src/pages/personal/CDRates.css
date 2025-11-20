@@ -1,0 +1,8 @@
+/* CDRates.css */
+.pc-cd { font-family:var(--font-sans); color:var(--text,#0b2545); background:var(--page-bg,#f6f7fb); }
+.pc-hero { padding:64px 5%; background:linear-gradient(180deg, rgba(10,30,60,0.85), rgba(10,30,60,0.6)); color:#fff; }
+.pc-section { padding:36px 5%; }
+.pc-rates-grid { display:grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap:18px; margin-top:18px; }
+.rate-card { background:#fff; padding:20px; border-radius:12px; box-shadow:0 8px 24px rgba(8,26,46,0.06); text-align:center; }
+.rate-apy { font-size:1.6rem; color:var(--primary,#0d6efd); margin:6px 0 8px; }
+.rate-desc { color:#556777; margin-bottom:12px; }

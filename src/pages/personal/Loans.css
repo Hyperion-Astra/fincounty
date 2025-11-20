@@ -1,0 +1,7 @@
+/* Loans.css */
+.pc-loans { background:var(--page-bg,#f6f7fb); color:var(--text,#0b2545); font-family:var(--font-sans); }
+.pc-hero { padding:64px 5%; background:linear-gradient(180deg, rgba(10,30,60,0.85), rgba(10,30,60,0.6)); color:#fff; }
+.pc-section { padding:40px 5%; }
+.pc-loan-grid { display:grid; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); gap:18px; margin-top:18px; }
+.loan-card { background:#fff;padding:20px;border-radius:12px;box-shadow:0 8px 24px rgba(8,26,46,0.06); }
+.pc-cta-card { background:#fff;padding:24px;border-radius:12px;box-shadow:0 12px 30px rgba(8,26,46,0.06); text-align:center; }
