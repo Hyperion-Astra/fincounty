@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { db, storage } from "../../firebase";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import "./KYCForm.css";
 
 export default function KYCForm() {
@@ -22,8 +21,6 @@ export default function KYCForm() {
     employment: "",
     idType: "driver_license",
     idNumber: "",
-    selfieFile: null,
-    idFile: null,
     accountType: "checking",
     transactionPin: ""
   });
@@ -52,20 +49,11 @@ export default function KYCForm() {
     return { account, routing };
   }
 
-  async function uploadFile(file, path) {
-    if (!file) return null;
-    const storageRef = ref(storage, path);
-    await uploadBytes(storageRef, file);
-    return getDownloadURL(storageRef);
-  }
 
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
     try {
-      // Upload files
-      const selfieUrl = await uploadFile(form.selfieFile, `kyc/${uid}/selfie_${Date.now()}`);
-      const idFileUrl = await uploadFile(form.idFile, `kyc/${uid}/id_${Date.now()}`);
 
       const { account, routing } = generateAccountNumbers();
 
@@ -78,8 +66,6 @@ export default function KYCForm() {
         address: { line1: form.addressLine1, city: form.city, state: form.state, zip: form.zip },
         employment: form.employment,
         id: { type: form.idType, number: form.idNumber },
-        selfie: selfieUrl,
-        idFile: idFileUrl,
         accountType: form.accountType,
         transactionPin: form.transactionPin,
         accountNumber: account,
@@ -173,16 +159,6 @@ export default function KYCForm() {
             <label>ID number</label>
             <input value={form.idNumber} onChange={e => update('idNumber', e.target.value)} />
           </div>
-        </div>
-
-        {/* File uploads */}
-        <div>
-          <label>Upload Selfie</label>
-          <input type="file" accept="image/*" onChange={e => update('selfieFile', e.target.files[0])} />
-        </div>
-        <div>
-          <label>Upload ID Document</label>
-          <input type="file" accept="image/*,application/pdf" onChange={e => update('idFile', e.target.files[0])} />
         </div>
 
         {/* Account type & PIN */}

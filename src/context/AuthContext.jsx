@@ -94,7 +94,7 @@ export function AuthProvider({ children }) {
       email,
       displayName: displayName || "",
       role: "client",
-      kycStatus: "incomplete",     // until they upload SSN + ID + selfie
+      kycStatus: "incomplete",     // until they  SSN + ID + selfie
       onboardingStep: 1,           // step-by-step flow
       emailVerified: false,
       createdAt: serverTimestamp(),
