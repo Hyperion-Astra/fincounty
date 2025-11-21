@@ -16,24 +16,41 @@ const Login = () => {
     setError("");
 
     try {
-      // Firebase Auth sign-in
+      // Firebase Auth login
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Fetch Firestore user data by UID
+      // ========= 🔥 FETCH USER FIRESTORE DATA =========
       const userDoc = await getDoc(doc(db, "users", user.uid));
+      const kycDoc = await getDoc(doc(db, "kyc", user.uid));
+      const accountDoc = await getDoc(doc(db, "accounts", user.uid));
 
-      if (userDoc.exists()) {
-        const userData = userDoc.data();
-
-        if (userData.role === "admin") {
-          navigate("/admin");
-        } else {
-          navigate("/dashboard");
-        }
-      } else {
-        setError("No such user found in database.");
+      if (!userDoc.exists()) {
+        setError("User record not found. Contact support.");
+        return;
       }
+
+      const userData = userDoc.data();
+
+      // Admin → admin dashboard
+      if (userData.role === "admin") {
+        navigate("/admin");
+        return;
+      }
+
+      // ========= 🔥 SOFT FLOW LOGIC =========
+      // Save KYC + ACCOUNT STATUS for dashboard banners
+      localStorage.setItem(
+        "bankMeta",
+        JSON.stringify({
+          kycCompleted: kycDoc.exists(),
+          accountsCreated: accountDoc.exists(),
+        })
+      );
+
+      // Normal user → dashboard
+      navigate("/dashboard");
+
     } catch (err) {
       console.error("Login error:", err);
 

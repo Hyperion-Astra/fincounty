@@ -1,0 +1,17 @@
+.transfer-card {
+  flex: 1;
+  background: linear-gradient(180deg,#ffffff 0%, #f7fbff 100%);
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.06);
+}
+.transfer-card h4 { margin-bottom: 10px; }
+.transfer-card label { display:block; margin-top:8px; font-size:0.9rem; }
+.transfer-card input, .transfer-card select {
+  width:100%; padding:10px; margin-top:6px; border:1px solid #e6e9ee; border-radius:8px;
+}
+.transfer-card button {
+  margin-top:12px; padding:10px 14px; background:#3b82f6; color:white; border:none; border-radius:8px; cursor:pointer;
+}
+.transfer-card button:disabled { opacity:0.6; cursor:default; }
+.muted { color:#6b7280; margin-top:8px; }

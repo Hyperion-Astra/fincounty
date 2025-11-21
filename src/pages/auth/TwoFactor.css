@@ -1,0 +1,5 @@
+.auth-page.centered { min-height:80vh; display:flex; align-items:center; justify-content:center; }
+.card { width:420px; padding:24px; background:#fff; border-radius:12px; box-shadow:0 8px 30px rgba(0,0,0,0.06); }
+.card h2{margin-bottom:8px} .actions{display:flex;gap:8px;margin-top:12px}
+button{padding:10px 14px;border-radius:8px;border:none;cursor:pointer;background:#3b82f6;color:#fff}
+button:disabled{opacity:0.6;cursor:default}

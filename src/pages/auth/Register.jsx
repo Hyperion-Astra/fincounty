@@ -1,135 +1,90 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
-import { db } from "../../firebase";
-import { doc, setDoc } from "firebase/firestore";
+import { useAuth } from "../../context/AuthContext";
 
 export default function Register() {
+  const { register } = useAuth();
   const navigate = useNavigate();
-  const auth = getAuth();
-
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
-  const register = async (e) => {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setLoading(true);
     setError("");
-
     try {
-      const userCred = await createUserWithEmailAndPassword(auth, email, password);
-      const uid = userCred.user.uid;
-
-      // Save client details
-      await setDoc(doc(db, "users", uid), {
-        email,
-        role: "client",
-        createdAt: Date.now(),
-      });
-
-      navigate("/dashboard");
+      const cred = await register(email, password, displayName);
+      // Redirect to KYC form
+      navigate(`/kyc/${cred.user.uid}`);
     } catch (err) {
-      setError("Unable to create account. Email may already exist.");
+      console.error(err);
+      setError(err.message || "Failed to create account");
+    } finally {
+      setLoading(false);
     }
-  };
+  }
 
   return (
-    <div style={styles.wrapper}>
-      <div style={styles.card}>
-        <h2 style={styles.title}>Create Account</h2>
+    <div className="max-w-md mx-auto p-6 bg-white rounded shadow">
+      <h2 className="text-2xl mb-4">Create an account</h2>
+      
+      {error && (
+        <div className="mb-3 p-2 bg-red-100 text-red-800 border border-red-300 rounded">
+          {error}
+        </div>
+      )}
 
-        {error && <p style={styles.error}>{error}</p>}
-
-        <form onSubmit={register} style={styles.form}>
+      <form onSubmit={handleSubmit} className="space-y-3">
+        <div>
+          <label className="block text-sm">Full name</label>
           <input
-            type="email"
-            placeholder="Email"
-            style={styles.input}
+            value={displayName}
+            onChange={e => setDisplayName(e.target.value)}
+            required
+            className="w-full p-2 border rounded"
+            disabled={loading}
+          />
+        </div>
+
+        <div>
+          <label className="block text-sm">Email</label>
+          <input
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={e => setEmail(e.target.value)}
+            type="email"
             required
+            className="w-full p-2 border rounded"
+            disabled={loading}
           />
+        </div>
 
+        <div>
+          <label className="block text-sm">Password</label>
           <input
-            type="password"
-            placeholder="Password"
-            style={styles.input}
             value={password}
-            onChange={(e) => setPassword(e.target.value)}
+            onChange={e => setPassword(e.target.value)}
+            type="password"
             required
+            className="w-full p-2 border rounded"
+            disabled={loading}
           />
+        </div>
 
-          <button style={styles.button} type="submit">
-            Register
-          </button>
-        </form>
+        <button
+          type="submit"
+          className="w-full py-2 rounded bg-purple-600 text-white"
+          disabled={loading}
+        >
+          {loading ? "Creating account..." : "Create account"}
+        </button>
+      </form>
 
-        <p onClick={() => navigate("/login")} style={styles.link}>
-          Already have an account? Login
-        </p>
-      </div>
+      <p className="text-xs text-gray-500 mt-3">
+        We will send a verification email. You’ll complete KYC next.
+      </p>
     </div>
   );
-}
-
-const styles = {
-  ...JSON.parse(JSON.stringify(stylesFromLogin())), // reuse same style
-};
-
-function stylesFromLogin() {
-  return {
-    wrapper: {
-      height: "90vh",
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      background: "#f4f4f4",
-    },
-    card: {
-      width: "350px",
-      padding: "30px",
-      background: "white",
-      borderRadius: "10px",
-      boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
-      textAlign: "center",
-    },
-    title: {
-      fontSize: "22px",
-      marginBottom: "15px",
-      fontWeight: "600",
-    },
-    form: {
-      display: "flex",
-      flexDirection: "column",
-      gap: "12px",
-    },
-    input: {
-      padding: "12px",
-      fontSize: "15px",
-      border: "1px solid #ccc",
-      borderRadius: "6px",
-    },
-    button: {
-      padding: "12px",
-      background: "#6c63ff",
-      color: "white",
-      border: "none",
-      borderRadius: "6px",
-      cursor: "pointer",
-      fontSize: "16px",
-      fontWeight: "600",
-    },
-    link: {
-      marginTop: "15px",
-      color: "#6c63ff",
-      cursor: "pointer",
-      textDecoration: "underline",
-    },
-    error: {
-      background: "#ffe0e0",
-      padding: "10px",
-      borderRadius: "6px",
-      color: "#c20000",
-    },
-  };
 }

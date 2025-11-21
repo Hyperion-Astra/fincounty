@@ -1,0 +1,15 @@
+.kyc-banner {
+  background-color: #ffecb3;
+  color: #856404;
+  padding: 15px;
+  border-radius: 8px;
+  text-align: center;
+  margin-bottom: 20px;
+  font-weight: 500;
+}
+.kyc-banner .cta {
+  color: #856404;
+  font-weight: 600;
+  text-decoration: underline;
+}
+.kyc-banner .cta:hover { color: #6f5703; }

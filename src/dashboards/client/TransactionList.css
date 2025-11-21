@@ -1,0 +1,18 @@
+.transaction-list {
+  background: #fff;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  margin-bottom: 20px;
+  overflow-x: auto;
+}
+.transaction-list table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.transaction-list th, td {
+  padding: 12px;
+  border-bottom: 1px solid #ddd;
+}
+.transaction-list th { background: #f8f9fa; text-align: left; }
+.transaction-list tr:hover { background: #f1f5f9; }

@@ -1,0 +1,6 @@
+.kyc-card { display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid #eef2ff; }
+.kyc-card .actions a { margin-right:8px; text-decoration:underline; color:#2563eb; }
+.kyc-card .actions button { margin-left:6px; padding:6px 10px; border-radius:8px; border:none; cursor:pointer; }
+.kyc-card .actions button:first-of-type { background:#10b981; color:#fff; }
+.kyc-card .actions button:last-of-type { background:#ef4444; color:#fff; }
+.muted { color:#6b7280; }

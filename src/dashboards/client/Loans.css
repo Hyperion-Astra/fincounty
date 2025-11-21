@@ -1,0 +1,13 @@
+.loans-card {
+  background:#fff; padding:18px; border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,0.06); margin-top:20px;
+}
+.loan-request form { display:flex; gap:8px; align-items:center; }
+.loan-request input { padding:8px; border-radius:8px; border:1px solid #e6e9ee; width:160px; }
+.loan-request button { padding:8px 12px; background:#ef4444; color:#fff; border:none; border-radius:8px; cursor:pointer; }
+.loan-list ul { list-style:none; padding-left:0; margin-top:12px; }
+.loan-list li { padding:8px 0; border-bottom:1px dashed #f1f5f9; display:flex; justify-content:space-between; align-items:center; }
+.chip { padding:4px 8px; border-radius:999px; font-size:0.8rem; }
+.chip.pending { background:#fff7ed; color:#b45309; }
+.chip.approved { background:#ecfdf5; color:#065f46; }
+.chip.rejected { background:#fff1f2; color:#9f1239; }
+.muted { color:#6b7280; margin-top:8px; }

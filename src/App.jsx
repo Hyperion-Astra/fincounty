@@ -6,7 +6,6 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import { AuthProvider } from "./context/AuthContext";
 
-
 // Public Pages
 import Home from "./pages/Home";
 import Personal from "./pages/Personal";
@@ -19,11 +18,7 @@ import About from "./pages/About";
 import Login from "./pages/auth/Login";
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
-import Transfer from "./dashboards/client/Transfer";
-import Deposit from "./dashboards/client/Deposit";
-import LoanApply from "./dashboards/client/LoanApply";
-import PayBills from "./dashboards/client/PayBills";
-
+import KYCForm from "./pages/auth/KYCForm";
 
 // Personal
 import CheckingAccounts from "./pages/personal/CheckingAccounts";
@@ -70,17 +65,17 @@ import WithdrawHistory from "./dashboards/client/WithdrawHistory";
 // Admin Dashboard
 import AdminLayout from "./dashboards/admin/AdminLayout";
 import AdminHome from "./dashboards/admin/pages/AdminHome";
-import Users from "./dashboards/admin/pages/Users";
+import UserList from "./dashboards/admin/pages/UserList";
 import LoansAdmin from "./dashboards/admin/pages/LoansAdmin";
 import WithdrawalsAdmin from "./dashboards/admin/pages/WithdrawalsAdmin";
-
 
 // 🔥 Wrapper so we can use useLocation outside Router
 function AppContent() {
   const location = useLocation();
   const hideLayout =
     location.pathname.startsWith("/dashboard") ||
-    location.pathname.startsWith("/admin");
+    location.pathname.startsWith("/admin") ||
+    location.pathname.startsWith("/kyc");
 
   return (
     <>
@@ -89,7 +84,6 @@ function AppContent() {
       <Routes>
         {/* Public Site */}
         <Route path="/" element={<Home />} />
-
         <Route path="/personal" element={<Personal />} />
         <Route path="/business" element={<Business />} />
         <Route path="/mortgage" element={<Mortgage />} />
@@ -97,10 +91,12 @@ function AppContent() {
         <Route path="/foundation" element={<Foundation />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
+
+        {/* Auth */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
-
+        <Route path="/kyc/:uid" element={<KYCForm />} />
 
         {/* Personal */}
         <Route path="/personal/checking-accounts" element={<CheckingAccounts />} />
@@ -134,7 +130,7 @@ function AppContent() {
 
         {/* Client Dashboard */}
         <Route
-          path="/dashboard"
+          path="/dashboard/*"
           element={
             <ClientRoute>
               <ClientLayout />
@@ -144,17 +140,13 @@ function AppContent() {
           <Route index element={<ClientDashboard />} />
           <Route path="profile" element={<Profile />} />
           <Route path="loans" element={<ClientLoans />} />
-          <Route path="transfer" element={<Transfer />} />
-          <Route path="apply-loan" element={<LoanApply />} />
-          <Route path="pay-bills" element={<PayBills />} />
-          <Route path="deposit" element={<Deposit />} />
           <Route path="withdraw" element={<Withdraw />} />
           <Route path="withdraw-history" element={<WithdrawHistory />} />
         </Route>
 
         {/* Admin Dashboard */}
         <Route
-          path="/admin"
+          path="/admin/*"
           element={
             <AdminRoute>
               <AdminLayout />
@@ -162,17 +154,19 @@ function AppContent() {
           }
         >
           <Route index element={<AdminHome />} />
-          <Route path="users" element={<Users />} />
+          <Route path="user-list" element={<UserList />} />
           <Route path="loans" element={<LoansAdmin />} />
           <Route path="withdrawals" element={<WithdrawalsAdmin />} />
         </Route>
+
+        {/* Catch-all */}
+        <Route path="*" element={<h2 className="text-center mt-10">Page Not Found</h2>} />
       </Routes>
 
       {!hideLayout && <Footer />}
     </>
   );
 }
-
 
 export default function App() {
   return (
@@ -183,4 +177,3 @@ export default function App() {
     </AuthProvider>
   );
 }
-

@@ -1,0 +1,5 @@
+.admin-layout { padding:20px; max-width:1200px; margin:20px auto; }
+.admin-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.admin-header .tabs button { margin-left:8px; padding:8px 12px; border-radius:8px; border:none; background:#f1f5f9; cursor:pointer; }
+.admin-header .tabs .active { background:#3b82f6; color:white; }
+.admin-main { background:#fff; padding:16px; border-radius:12px; box-shadow:0 6px 18px rgba(2,6,23,0.04); }

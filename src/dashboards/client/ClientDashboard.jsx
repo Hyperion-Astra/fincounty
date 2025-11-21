@@ -1,116 +1,79 @@
-// src/dashboards/client/ClientDashboard.js
+// src/dashboards/client/ClientDashboard.jsx
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { db } from "../../firebase";
 import { doc, getDoc, collection, query, orderBy, limit, getDocs } from "firebase/firestore";
-import { useAuth } from "../../context/AuthContext";
-import DashboardCard from "../components/DashboardCards";
 import "./ClientDashboard.css";
 
 export default function ClientDashboard() {
-  const { user } = useAuth();
-  const [wallet, setWallet] = useState(0);
-  const [savings, setSavings] = useState(0);
-  const [loan, setLoan] = useState(0);
+  const [userData, setUserData] = useState(null);
+  const [balances, setBalances] = useState({ checking: 0, savings: 0 });
   const [transactions, setTransactions] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    async function loadDashboard() {
-      if (!user) return;
-
+    async function fetchData() {
       try {
-        // Load wallet, savings, loan
-        const ref = doc(db, "users", user.uid);
-        const snap = await getDoc(ref);
-        if (snap.exists()) {
-          const data = snap.data();
-          setWallet(data.wallet || 0);
-          setSavings(data.savings || 0);
-          setLoan(data.loan || 0);
-        }
+        const uid = localStorage.getItem("uid");
+        if (!uid) return;
 
-        // Load recent transactions
-        const txQuery = query(
-          collection(db, "users", user.uid, "transactions"),
-          orderBy("date", "desc"),
+        const userSnap = await getDoc(doc(db, "users", uid));
+        if (userSnap.exists()) setUserData(userSnap.data());
+
+        const accountSnap = await getDoc(doc(db, "accounts", uid));
+        if (accountSnap.exists()) setBalances(accountSnap.data());
+
+        const q = query(
+          collection(db, "transactions"),
+          orderBy("createdAt", "desc"),
           limit(5)
         );
-        const txSnap = await getDocs(txQuery);
-        const txData = txSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-        setTransactions(txData);
-      } catch (e) {
-        console.error("Dashboard load error", e);
+        const txSnap = await getDocs(q);
+        setTransactions(txSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      } catch (err) {
+        console.error("Error fetching dashboard data:", err);
       }
-
-      setLoading(false);
     }
-
-    loadDashboard();
-  }, [user]);
-
-  if (loading) return <div className="center-loading">Loading...</div>;
+    fetchData();
+  }, []);
 
   return (
-    <div className="client-dashboard">
-      <h2 className="dashboard-title">Welcome Back!</h2>
-
-      {/* Summary Cards */}
-      <div className="dash-grid">
-        <DashboardCard
-          title="Wallet Balance"
-          value={`$${wallet.toLocaleString()}`}
-          color="primary"
-        />
-        <DashboardCard
-          title="Savings"
-          value={`$${savings.toLocaleString()}`}
-          color="green"
-        />
-        <DashboardCard
-          title="Active Loans"
-          value={`$${loan.toLocaleString()}`}
-          color="secondary"
-        />
+    <div className="dashboard-container">
+      <h2>Welcome, {userData?.displayName || "User"}</h2>
+      <div className="balances">
+        <div className="balance-card">
+          <h3>Checking</h3>
+          <p>${balances.checking.toFixed(2)}</p>
+        </div>
+        <div className="balance-card">
+          <h3>Savings</h3>
+          <p>${balances.savings.toFixed(2)}</p>
+        </div>
+        <div className="balance-card total">
+          <h3>Total</h3>
+          <p>${(balances.checking + balances.savings).toFixed(2)}</p>
+        </div>
       </div>
 
-      {/* Quick Actions */}
-      <div className="quick-actions">
-  <button onClick={() => navigate("/dashboard/transfer")}>Transfer Money</button>
-  <button onClick={() => navigate("/dashboard/deposit")}>Deposit</button>
-  <button onClick={() => navigate("/dashboard/apply-loan")}>Apply for Loan</button>
-    <button onClick={() => navigate("/dashboard/pay-bills")}>Pay Utility Bills</button>
-</div>
-
-      {/* Recent Transactions */}
-      <div className="dash-section">
-        <h3>Recent Transactions</h3>
-        {transactions.length === 0 ? (
-          <div className="empty-state">No recent transactions</div>
-        ) : (
-          <table className="transactions-table">
-            <thead>
-              <tr>
-                <th>Date</th>
-                <th>Type</th>
-                <th>Amount</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              {transactions.map(tx => (
-                <tr key={tx.id}>
-                  <td>{new Date(tx.date.seconds * 1000).toLocaleDateString()}</td>
-                  <td>{tx.type}</td>
-                  <td>${tx.amount.toLocaleString()}</td>
-                  <td>{tx.status}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        )}
-      </div>
+      <h3>Recent Transactions</h3>
+      <table className="transactions-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Amount</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {transactions.map(tx => (
+            <tr key={tx.id}>
+              <td>{new Date(tx.createdAt?.seconds * 1000).toLocaleDateString()}</td>
+              <td>{tx.type}</td>
+              <td>${tx.amount.toFixed(2)}</td>
+              <td>{tx.status}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
     </div>
   );
 }

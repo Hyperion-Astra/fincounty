@@ -1,0 +1,3 @@
+.tx-logs table { width:100%; border-collapse:collapse; }
+.tx-logs th, td { padding:10px; border-bottom:1px solid #eef2ff; }
+.tx-logs tr:hover { background:#fbfdff; }

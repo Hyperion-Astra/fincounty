@@ -1,93 +1,43 @@
-// src/dashboards/client/components/Profile.js
+// src/dashboards/client/Profile.jsx
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase";
-import { useAuth } from "../../context/AuthContext";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import "./Profile.css";
 
 export default function Profile() {
-  const { user } = useAuth();
-  const [form, setForm] = useState({
-    fullName: "",
-    phone: "",
-    email: "",
-  });
-  const [saving, setSaving] = useState(false);
-  const [msg, setMsg] = useState("");
+  const [userData, setUserData] = useState(null);
+  const [accountData, setAccountData] = useState(null);
 
   useEffect(() => {
-    async function loadProfile() {
-      const ref = doc(db, "users", user.uid);
-      const snap = await getDoc(ref);
+    async function fetchData() {
+      const uid = localStorage.getItem("uid");
+      if (!uid) return;
 
-      if (snap.exists()) {
-        const data = snap.data();
-        setForm({
-          fullName: data.fullName || "",
-          phone: data.phone || "",
-          email: data.email || user.email, // fallback to auth email
-        });
-      }
+      const userSnap = await getDoc(doc(db, "users", uid));
+      if (userSnap.exists()) setUserData(userSnap.data());
+
+      const accountSnap = await getDoc(doc(db, "accounts", uid));
+      if (accountSnap.exists()) setAccountData(accountSnap.data());
     }
-    loadProfile();
-  }, [user]);
-
-  async function saveProfile(e) {
-    e.preventDefault();
-    setSaving(true);
-    setMsg("");
-
-    try {
-      const ref = doc(db, "users", user.uid);
-      await updateDoc(ref, {
-        fullName: form.fullName,
-        phone: form.phone,
-      });
-
-      setMsg("Profile updated successfully.");
-    } catch (e) {
-      console.error(e);
-      setMsg("Failed to update profile.");
-    }
-
-    setSaving(false);
-  }
+    fetchData();
+  }, []);
 
   return (
-    <div className="profile-page">
-      <h2 className="profile-title">Your Profile</h2>
-
-      <form className="profile-form" onSubmit={saveProfile}>
-        <div className="form-group">
-          <label>Full Name</label>
-          <input
-            type="text"
-            value={form.fullName}
-            onChange={(e) => setForm({ ...form, fullName: e.target.value })}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Phone Number</label>
-          <input
-            type="text"
-            value={form.phone}
-            onChange={(e) => setForm({ ...form, phone: e.target.value })}
-          />
-        </div>
-
-        <div className="form-group">
-          <label>Email (read-only)</label>
-          <input type="email" value={form.email} readOnly />
-        </div>
-
-        <button className="btn-save" disabled={saving}>
-          {saving ? "Saving..." : "Save Changes"}
-        </button>
-
-        {msg && <p className="profile-msg">{msg}</p>}
-      </form>
+    <div className="profile-container">
+      <h2>Profile</h2>
+      <div className="profile-card">
+        <p><strong>Name:</strong> {userData?.displayName}</p>
+        <p><strong>Email:</strong> {userData?.email}</p>
+        <p><strong>Phone:</strong> {userData?.phone}</p>
+        <p><strong>KYC Status:</strong> {userData?.kycStatus}</p>
+        {accountData && (
+          <>
+            <p><strong>Checking Account:</strong> {accountData.checkingAccountNumber}</p>
+            <p><strong>Savings Account:</strong> {accountData.savingsAccountNumber}</p>
+            <p><strong>Routing Number:</strong> {accountData.routingNumber}</p>
+          </>
+        )}
+      </div>
     </div>
   );
 }

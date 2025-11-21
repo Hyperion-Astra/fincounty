@@ -1,0 +1,15 @@
+.balance-card {
+  flex: 1;
+  background: #f1f5f9;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.balance-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+}
+.balance-card h3 { margin-bottom: 10px; font-size: 1.2rem; }
+.balance-card p { font-size: 1.6rem; font-weight: 600; }

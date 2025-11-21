@@ -1,0 +1,4 @@
+.dep-card { display:flex; justify-content:space-between; align-items:center; padding:12px; border-bottom:1px solid #eef2ff; }
+.dep-card button { margin-left:8px; padding:6px 10px; border-radius:8px; cursor:pointer; border:none; }
+.dep-card button:first-of-type { background:#10b981; color:#fff; }
+.dep-card button:last-of-type { background:#ef4444; color:#fff; }

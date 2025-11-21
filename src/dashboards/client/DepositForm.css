@@ -1,0 +1,18 @@
+.deposit-card {
+  width: 360px;
+  background: #fff;
+  padding: 18px;
+  border-radius: 12px;
+  border: 1px solid #eef2ff;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.04);
+}
+.deposit-card h4 { margin-bottom: 10px; }
+.deposit-card label { display:block; margin-top:8px; font-size:0.9rem; }
+.deposit-card input, .deposit-card select {
+  width:100%; padding:10px; margin-top:6px; border:1px solid #e6e9ee; border-radius:8px;
+}
+.deposit-card button {
+  margin-top:12px; padding:10px 14px; background:#10b981; color:white; border:none; border-radius:8px; cursor:pointer;
+}
+.muted { color:#6b7280; margin-top:8px; }
+.deposit-card button:disabled { opacity:0.6; cursor:default; }

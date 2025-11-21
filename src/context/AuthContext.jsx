@@ -1,72 +1,122 @@
-// src/context/AuthContext.jsx
-import React, { createContext, useContext, useEffect, useState } from "react";
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
 import { auth, db } from "../firebase";
 import {
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
-  signOut,
   onAuthStateChanged,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
 } from "firebase/auth";
-import { doc, getDoc, setDoc } from "firebase/firestore";
 
+import {
+  doc,
+  onSnapshot,
+  setDoc,
+  getDoc,
+  serverTimestamp,
+} from "firebase/firestore";
+
+
+// ------------------------
+// CONTEXT SETUP
+// ------------------------
 const AuthContext = createContext();
-export const useAuth = () => useContext(AuthContext);
+export function useAuth() {
+  return useContext(AuthContext);
+}
 
+
+// ------------------------
+// PROVIDER
+// ------------------------
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);          // <-- FIXED
-  const [userData, setUserData] = useState(null);  // profile (role, email, etc)
-  const [loading, setLoading] = useState(true);
+  const [currentUser, setCurrentUser] = useState(null);       // firebase auth user
+  const [userProfile, setUserProfile] = useState(null);       // firestore user doc
+  const [loading, setLoading] = useState(true);               // gate for routes
+  const [profileLoading, setProfileLoading] = useState(true); // firestore listener
 
-  // Register
-  const register = async (email, password) => {
-    const res = await createUserWithEmailAndPassword(auth, email, password);
-    const uid = res.user.uid;
 
-    await setDoc(doc(db, "users", uid), {
-      email,
-      role: "client",
-      createdAt: Date.now(),
-      walletBalance: 0,
-    });
-
-    return res.user;
-  };
-
-  // Login
-  const login = (email, password) =>
-    signInWithEmailAndPassword(auth, email, password);
-
-  // Logout
-  const logout = () => signOut(auth);
-
-  // Watch for auth updates
+  // --------------------------------------
+  // AUTH LISTENER (checks Firebase Auth)
+  // --------------------------------------
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
-      setUser(firebaseUser);
+    const unsub = onAuthStateChanged(auth, async (user) => {
+      setCurrentUser(user);
 
-      if (firebaseUser) {
-        try {
-          const snap = await getDoc(doc(db, "users", firebaseUser.uid));
-          setUserData(snap.exists() ? snap.data() : null);
-        } catch (err) {
-          console.warn("Firestore error:", err.message);
-          setUserData(null);
-        }
+      if (user) {
+        // Load Firestore profile
+        const userRef = doc(db, "users", user.uid);
+
+        const unsubscribeProfile = onSnapshot(userRef, (snap) => {
+          if (snap.exists()) {
+            setUserProfile(snap.data());
+          } else {
+            setUserProfile(null);
+          }
+          setProfileLoading(false);
+        });
+
+        // Cleanup Firestore listener when logging out
+        return () => unsubscribeProfile();
       } else {
-        setUserData(null);
+        setUserProfile(null);
+        setProfileLoading(false);
       }
 
       setLoading(false);
     });
 
-    return unsubscribe;
+    return unsub;
   }, []);
 
-  return (
-    <AuthContext.Provider
-      value={{ user, userData, login, logout, register, loading }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+
+
+  // --------------------------------------
+  // REGISTER (email + password + user doc)
+  // --------------------------------------
+  async function register(email, password, displayName) {
+    // Create account
+    const cred = await createUserWithEmailAndPassword(
+      auth,
+      email,
+      password
+    );
+
+    // Send verification email
+    await sendEmailVerification(cred.user);
+
+    // Prepare user doc for Firestore
+    const userDoc = {
+      email,
+      displayName: displayName || "",
+      role: "client",
+      kycStatus: "incomplete",     // until they upload SSN + ID + selfie
+      onboardingStep: 1,           // step-by-step flow
+      emailVerified: false,
+      createdAt: serverTimestamp(),
+    };
+
+    // Save to Firestore
+    await setDoc(doc(db, "users", cred.user.uid), userDoc, { merge: true });
+
+    return cred;
+  }
+
+
+
+  // --------------------------------------
+  // CONTEXT EXPORT
+  // --------------------------------------
+  const value = {
+    currentUser,
+    userProfile,
+    loading: loading || profileLoading, // route guards wait for both
+    register,
+  };
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
