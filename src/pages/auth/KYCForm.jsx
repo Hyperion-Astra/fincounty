@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { db, storage } from "../../firebase";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import "./KYCForm.css";
 
 export default function KYCForm() {
   const { uid } = useParams();
@@ -96,9 +97,9 @@ export default function KYCForm() {
         routingNumber: routing
       }, { merge: true });
 
-      setSuccess(true); // show success message
+      setSuccess(true);
       setTimeout(() => {
-        navigate("/login"); // redirect after 2.5 seconds
+        navigate("/login");
       }, 2500);
 
     } catch (err) {
@@ -110,95 +111,96 @@ export default function KYCForm() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white rounded shadow">
-      <h2 className="text-2xl mb-4">Complete your KYC</h2>
+    <div className="kyc-container">
+      <h2>Complete your KYC</h2>
 
       {success && (
-        <div className="mb-4 p-3 bg-green-100 text-green-800 border border-green-300 rounded">
+        <div className="kyc-success">
           KYC submitted successfully! Redirecting to login...
         </div>
       )}
 
-      <form onSubmit={handleSubmit} className="space-y-3">
+      <form onSubmit={handleSubmit} className="kyc-form">
+
         {/* Personal info */}
-        <div className="grid md:grid-cols-2 gap-3">
+        <div className="kyc-grid kyc-grid-2">
           <div>
-            <label className="block text-sm">Full legal name</label>
-            <input value={form.fullName} onChange={e => update('fullName', e.target.value)} required className="w-full p-2 border rounded" />
+            <label>Full legal name</label>
+            <input value={form.fullName} onChange={e => update('fullName', e.target.value)} required />
           </div>
           <div>
-            <label className="block text-sm">Date of birth</label>
-            <input type="date" value={form.dob} onChange={e => update('dob', e.target.value)} required className="w-full p-2 border rounded" />
+            <label>Date of birth</label>
+            <input type="date" value={form.dob} onChange={e => update('dob', e.target.value)} required />
           </div>
           <div>
-            <label className="block text-sm">SSN (full)</label>
-            <input value={form.ssn} onChange={e => update('ssn', e.target.value)} required className="w-full p-2 border rounded" />
+            <label>SSN (full)</label>
+            <input value={form.ssn} onChange={e => update('ssn', e.target.value)} required />
           </div>
           <div>
-            <label className="block text-sm">Phone</label>
-            <input value={form.phone} onChange={e => update('phone', e.target.value)} required className="w-full p-2 border rounded" />
+            <label>Phone</label>
+            <input value={form.phone} onChange={e => update('phone', e.target.value)} required />
           </div>
         </div>
 
         {/* Address */}
         <div>
-          <label className="block text-sm">Address</label>
-          <input value={form.addressLine1} onChange={e => update('addressLine1', e.target.value)} placeholder="Street, Apt" className="w-full p-2 border rounded mb-2" />
-          <div className="grid md:grid-cols-3 gap-2">
-            <input value={form.city} onChange={e => update('city', e.target.value)} placeholder="City" className="p-2 border rounded" />
-            <input value={form.state} onChange={e => update('state', e.target.value)} placeholder="State" className="p-2 border rounded" />
-            <input value={form.zip} onChange={e => update('zip', e.target.value)} placeholder="ZIP code" className="p-2 border rounded" />
+          <label>Address</label>
+          <input value={form.addressLine1} onChange={e => update('addressLine1', e.target.value)} placeholder="Street, Apt" className="mb-2" />
+          <div className="kyc-grid kyc-grid-3">
+            <input value={form.city} onChange={e => update('city', e.target.value)} placeholder="City" />
+            <input value={form.state} onChange={e => update('state', e.target.value)} placeholder="State" />
+            <input value={form.zip} onChange={e => update('zip', e.target.value)} placeholder="ZIP code" />
           </div>
         </div>
 
         {/* Employment */}
         <div>
-          <label className="block text-sm">Employment information</label>
-          <input value={form.employment} onChange={e => update('employment', e.target.value)} placeholder="Employer or self-employed" className="w-full p-2 border rounded" />
+          <label>Employment information</label>
+          <input value={form.employment} onChange={e => update('employment', e.target.value)} placeholder="Employer or self-employed" />
         </div>
 
         {/* ID info */}
-        <div className="grid md:grid-cols-2 gap-3">
+        <div className="kyc-grid kyc-grid-2">
           <div>
-            <label className="block text-sm">ID type</label>
-            <select value={form.idType} onChange={e => update('idType', e.target.value)} className="w-full p-2 border rounded">
+            <label>ID type</label>
+            <select value={form.idType} onChange={e => update('idType', e.target.value)}>
               <option value="driver_license">Driver's License</option>
               <option value="passport">Passport</option>
               <option value="state_id">State ID</option>
             </select>
           </div>
           <div>
-            <label className="block text-sm">ID number</label>
-            <input value={form.idNumber} onChange={e => update('idNumber', e.target.value)} className="w-full p-2 border rounded" />
+            <label>ID number</label>
+            <input value={form.idNumber} onChange={e => update('idNumber', e.target.value)} />
           </div>
         </div>
 
         {/* File uploads */}
         <div>
-          <label className="block text-sm">Upload Selfie</label>
-          <input type="file" accept="image/*" onChange={e => update('selfieFile', e.target.files[0])} className="w-full p-2 border rounded" />
+          <label>Upload Selfie</label>
+          <input type="file" accept="image/*" onChange={e => update('selfieFile', e.target.files[0])} />
         </div>
         <div>
-          <label className="block text-sm">Upload ID Document</label>
-          <input type="file" accept="image/*,application/pdf" onChange={e => update('idFile', e.target.files[0])} className="w-full p-2 border rounded" />
+          <label>Upload ID Document</label>
+          <input type="file" accept="image/*,application/pdf" onChange={e => update('idFile', e.target.files[0])} />
         </div>
 
         {/* Account type & PIN */}
-        <div className="grid md:grid-cols-2 gap-3">
+        <div className="kyc-grid kyc-grid-2">
           <div>
-            <label className="block text-sm">Account type</label>
-            <select value={form.accountType} onChange={e => update('accountType', e.target.value)} className="w-full p-2 border rounded">
+            <label>Account type</label>
+            <select value={form.accountType} onChange={e => update('accountType', e.target.value)}>
               <option value="checking">Checking</option>
               <option value="savings">Savings</option>
             </select>
           </div>
           <div>
-            <label className="block text-sm">Transaction PIN</label>
-            <input type="password" value={form.transactionPin} onChange={e => update('transactionPin', e.target.value)} className="w-full p-2 border rounded" />
+            <label>Transaction PIN</label>
+            <input type="password" value={form.transactionPin} onChange={e => update('transactionPin', e.target.value)} />
           </div>
         </div>
 
-        <button type="submit" disabled={loading} className="mt-4 w-full bg-blue-600 text-white p-2 rounded">
+        <button type="submit" disabled={loading}>
           {loading ? "Submitting..." : "Submit KYC"}
         </button>
       </form>
