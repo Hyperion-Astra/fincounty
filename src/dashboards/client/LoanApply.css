@@ -1,0 +1,7 @@
+.loan-page { max-width:680px; margin:auto; padding:24px; }
+.loan-form { display:flex; flex-direction:column; gap:10px; background:#fff; padding:18px; border-radius:12px; box-shadow:0 8px 30px rgba(2,6,23,0.06); }
+.loan-form input, .loan-form select { padding:10px; border-radius:8px; border:1px solid #e6e9ee; }
+.loan-form button { margin-top:8px; padding:10px; border-radius:8px; background:#ef4444; color:#fff; border:none; cursor:pointer; }
+.msg { margin-top:10px; padding:10px; border-radius:8px; }
+.msg.success { background:#ecfdf5; color:#065f46; }
+.msg.error { background:#fff1f2; color:#9f1239; }

@@ -1,76 +1,66 @@
-/* Client dashboard specific styles (client.css) */
-
+/* Client Layout */
 .client-layout {
   display: flex;
-  min-height: 100vh;
-  background: #f5f7fa;
-  font-family: "Poppins", sans-serif;
 }
 
-/* Sidebar area (space reserved) */
+/* Sidebar */
 .client-sidebar {
-  width: 260px;
-  background: #6a3cbc;
+  width: 220px;
+  background-color: #1f2937;
   color: #fff;
-  padding: 24px 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
+  min-height: 100vh;
+  padding: 1rem;
   position: fixed;
-  height: 100vh;
-  left: 0;
-  top: 0;
 }
 
-.client-sidebar .logo {
-  font-size: 20px;
-  font-weight: 700;
-  letter-spacing: 0.3px;
+.client-sidebar h2 {
+  margin-bottom: 2rem;
+  font-size: 1.5rem;
 }
 
-.client-sidebar nav {
-  margin-top: 10px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.client-sidebar a {
-  color: rgba(255,255,255,0.95);
+.client-sidebar nav a {
+  display: block;
+  padding: 0.75rem 0;
+  color: #d1d5db;
   text-decoration: none;
-  padding: 10px 12px;
-  border-radius: 8px;
-  font-weight: 600;
+  transition: color 0.2s;
 }
 
-.client-sidebar a:hover,
-.client-sidebar a.active {
-  background: rgba(255,255,255,0.08);
+.client-sidebar nav a.active,
+.client-sidebar nav a:hover {
+  color: #fff;
 }
 
 /* Topbar */
+.client-main {
+  margin-left: 220px;
+  width: calc(100% - 220px);
+}
+
 .client-topbar {
-  margin-left: 260px;
-  height: 72px;
+  height: 60px;
+  background-color: #f9fafb;
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 28px;
-  background: linear-gradient(90deg,#ffffff00,#ffffff00);
-  border-bottom: 1px solid #eef2ff;
+  align-items: center;
+  padding: 0 1.5rem;
+  border-bottom: 1px solid #e5e7eb;
+  position: fixed;
+  width: calc(100% - 220px);
+  z-index: 100;
 }
 
-.client-topbar .welcome {
-  font-size: 16px;
-  font-weight: 600;
-  color: #1f2937;
+.client-topbar-right img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-left: 0.5rem;
 }
 
-/* Main content area */
 .client-content {
-  margin-left: 260px;
-  padding: 28px;
-  width: calc(100% - 260px);
+  margin-top: 60px;
+  padding: 1.5rem;
 }
 
 /* Dashboard grid */

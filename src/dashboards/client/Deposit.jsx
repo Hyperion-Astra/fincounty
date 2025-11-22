@@ -1,90 +1,90 @@
 import React, { useState } from "react";
-import { submitDeposit } from "../../services/DepositService.jsx";
-import { useAuth } from "../../context/AuthContext.jsx";
-import "./Transfer.css"
+import { useAuth } from "../../context/AuthContext";
+import { db } from "../../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import "./Deposit.css";
 
-const Deposit = () => {
+export default function Deposit() {
   const { currentUser } = useAuth();
+  const uid = currentUser?.uid;
 
+  const [accountType, setAccountType] = useState("checking");
   const [amount, setAmount] = useState("");
-  const [method, setMethod] = useState("bank");
-  const [proofUrl, setProofUrl] = useState("");
-  const [note, setNote] = useState("");
-
+  const [reference, setReference] = useState("");
   const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState(null);
 
-  const handleSubmit = async (e) => {
+  function parseAmount(v) {
+    const s = String(v).trim();
+    if (!s) return 0;
+    const cleaned = s.replace(/[^\d.]/g, "");
+    const parts = cleaned.split(".");
+    if (parts.length > 2) return NaN;
+    let whole = parts[0] || "0";
+    let frac = parts[1] || "";
+    if (frac.length > 2) frac = frac.slice(0, 2);
+    const composed = frac ? `${whole}.${frac}` : whole;
+    return Number(composed);
+  }
+
+  async function handleDeposit(e) {
     e.preventDefault();
+    setMsg(null);
 
-    if (!amount) {
-      setMsg("Enter an amount.");
+    const amt = parseAmount(amount);
+    if (Number.isNaN(amt) || amt <= 0) {
+      setMsg({ type: "error", text: "Enter a valid amount." });
+      return;
+    }
+    if (!uid) {
+      setMsg({ type: "error", text: "You must be logged in." });
       return;
     }
 
     setLoading(true);
-    setMsg("");
-
     try {
-      await submitDeposit({
-        userId: currentUser.uid,
-        userEmail: currentUser.email,
-        amount,
-        method,
-        proofUrl,
-        note,
+      // create a pending deposit (admin will approve)
+      await addDoc(collection(db, "transactions"), {
+        uid,
+        type: "deposit",
+        amount: amt,
+        accountType,
+        reference: reference || null,
+        status: "pending",
+        createdAt: serverTimestamp(),
       });
 
-      setMsg("Deposit submitted successfully! Pending approval.");
+      setMsg({ type: "success", text: "Deposit requested. It will appear once approved." });
       setAmount("");
-      setNote("");
-      setProofUrl("");
+      setReference("");
     } catch (err) {
-      setMsg("Error submitting deposit: " + err.message);
+      console.error(err);
+      setMsg({ type: "error", text: "Failed to request deposit." });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
-  };
+  }
 
   return (
-    <div className="form-page">
-      <h2>Make a Deposit</h2>
-
-      <form onSubmit={handleSubmit}>
-        <label>Amount</label>
-        <input
-          type="number"
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          required
-        />
-
-        <label>Payment Method</label>
-        <select value={method} onChange={(e) => setMethod(e.target.value)}>
-          <option value="bank">Bank Transfer</option>
-          <option value="card">Card</option>
-          <option value="crypto">Crypto</option>
+    <div className="deposit-page">
+      <h2>Request a Deposit</h2>
+      <form className="deposit-form" onSubmit={handleDeposit}>
+        <label>To account</label>
+        <select value={accountType} onChange={(e) => setAccountType(e.target.value)} disabled={loading}>
+          <option value="checking">Checking</option>
+          <option value="savings">Savings</option>
         </select>
 
-        <label>Proof Image (URL)</label>
-        <input
-          type="text"
-          value={proofUrl}
-          onChange={(e) => setProofUrl(e.target.value)}
-          placeholder="Optional"
-        />
+        <label>Amount (USD)</label>
+        <input value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0.00" inputMode="decimal" disabled={loading} />
 
-        <label>Note (optional)</label>
-        <textarea value={note} onChange={(e) => setNote(e.target.value)} />
+        <label>Reference (optional)</label>
+        <input value={reference} onChange={(e) => setReference(e.target.value)} placeholder="Bank reference or note" disabled={loading} />
 
-        <button type="submit" disabled={loading}>
-          {loading ? "Submitting..." : "Submit Deposit"}
-        </button>
+        <button type="submit" disabled={loading}>{loading ? "Requesting..." : "Request deposit"}</button>
+
+        {msg && <p className={`msg ${msg.type}`}>{msg.text}</p>}
       </form>
-
-      {msg && <p className="form-msg">{msg}</p>}
     </div>
   );
-};
-
-export default Deposit;
+}

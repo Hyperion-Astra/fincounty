@@ -1,88 +1,10 @@
-/* Example: Transfer.css, Deposit.css, LoanApply.css can share same base */
-
-.page {
-  max-width: 500px;
-  margin: 2rem auto;
-  padding: 2rem;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-}
-
-.page h2 {
-  font-size: 1.8rem;
-  font-weight: bold;
-  margin-bottom: 1.5rem;
-  color: #1f2937;
-  text-align: center;
-}
-
-.balance-card {
-  background: #f3f4f6;
-  padding: 1rem;
-  border-radius: 8px;
-  margin-bottom: 1.5rem;
-  display: flex;
-  justify-content: space-between;
-  font-weight: bold;
-  color: #111827;
-}
-
-form {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-form label {
-  font-weight: 500;
-  color: #374151;
-}
-
-form input, form select {
-  padding: 0.75rem 1rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 1rem;
-}
-
-form input:focus, form select:focus {
-  border-color: #2563eb;
-  outline: none;
-}
-
-form button {
-  padding: 0.75rem 1rem;
-  background: #2563eb;
-  color: #fff;
-  font-weight: bold;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background 0.2s;
-}
-
-form button:hover {
-  background: #1e40af;
-}
-
-.message {
-  margin-top: 1rem;
-  font-weight: 500;
-  color: #16a34a; /* green for success */
-  text-align: center;
-}
-
-.current-loans {
-  margin-top: 2rem;
-}
-
-.current-loans ul {
-  list-style: none;
-  padding: 0;
-}
-
-.current-loans li {
-  padding: 0.5rem 0;
-  border-bottom: 1px solid #e5e7eb;
-}
+.transfer-page { max-width:680px; margin:auto; padding:24px; }
+.transfer-form { display:flex; flex-direction:column; gap:10px; background:#fff; padding:18px; border-radius:12px; box-shadow:0 8px 30px rgba(2,6,23,0.06); }
+.transfer-form label { font-weight:600; font-size:0.95rem; }
+.transfer-form input, .transfer-form select { padding:10px; border-radius:8px; border:1px solid #e6e9ee; }
+.transfer-form button { margin-top:8px; padding:10px; border-radius:8px; background:#3b82f6; color:#fff; border:none; cursor:pointer; }
+.msg { margin-top:10px; padding:10px; border-radius:8px; }
+.msg.success { background:#ecfdf5; color:#065f46; }
+.msg.error { background:#fff1f2; color:#9f1239; }
+.msg.info { background:#eff6ff; color:#1e3a8a; }
+.muted { color:#6b7280; margin-top:8px; }

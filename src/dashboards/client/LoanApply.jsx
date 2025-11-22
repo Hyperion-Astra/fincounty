@@ -1,123 +1,90 @@
-// src/dashboards/client/pages/LoanApply.jsx
 import React, { useState } from "react";
-import { requestLoan } from "../../services/LoanService.jsx";
-import { useAuth } from "../../context/AuthContext.jsx";
-import "./Transfer.css"
+import { useAuth } from "../../context/AuthContext";
+import { db } from "../../firebase";
+import { collection, addDoc, serverTimestamp } from "firebase/firestore";
+import "./LoanApply.css";
 
-const LoanApply = () => {
+export default function LoanApply() {
   const { currentUser } = useAuth();
+  const uid = currentUser?.uid;
 
-  const [form, setForm] = useState({
-    loanType: "",
-    amount: "",
-    durationMonths: "",
-    income: "",
-    employment: "",
-    documentUrl: "",
-    note: "",
-  });
-
+  const [amount, setAmount] = useState("");
+  const [termMonths, setTermMonths] = useState("12");
+  const [purpose, setPurpose] = useState("");
   const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState(null);
 
-  const update = (key, value) => setForm({ ...form, [key]: value });
+  function parseAmount(v) {
+    const s = String(v).trim();
+    if (!s) return 0;
+    const cleaned = s.replace(/[^\d.]/g, "");
+    const parts = cleaned.split(".");
+    if (parts.length > 2) return NaN;
+    let whole = parts[0] || "0";
+    let frac = parts[1] || "";
+    if (frac.length > 2) frac = frac.slice(0, 2);
+    const composed = frac ? `${whole}.${frac}` : whole;
+    return Number(composed);
+  }
 
-  const handleSubmit = async (e) => {
+  async function submitLoan(e) {
     e.preventDefault();
-
-    if (!form.amount || !form.loanType) {
-      setMsg("Fill all required fields.");
+    setMsg(null);
+    const amt = parseAmount(amount);
+    if (Number.isNaN(amt) || amt < 100) {
+      setMsg({ type: "error", text: "Enter a loan amount (minimum $100)." });
+      return;
+    }
+    if (!uid) {
+      setMsg({ type: "error", text: "You must be logged in." });
       return;
     }
 
     setLoading(true);
-    setMsg("");
-
     try {
-      await requestLoan({
-        userId: currentUser.uid,
-        userEmail: currentUser.email,
-        ...form,
+      await addDoc(collection(db, "loans"), {
+        uid,
+        amount: amt,
+        termMonths: Number(termMonths),
+        purpose: purpose || null,
+        status: "pending",
+        createdAt: serverTimestamp(),
       });
 
-      setMsg("Loan request submitted! Await approval.");
-      setForm({
-        loanType: "",
-        amount: "",
-        durationMonths: "",
-        income: "",
-        employment: "",
-        documentUrl: "",
-        note: "",
-      });
+      setMsg({ type: "success", text: "Loan application submitted. Admin will review." });
+      setAmount("");
+      setPurpose("");
+      setTermMonths("12");
     } catch (err) {
-      setMsg("Error: " + err.message);
+      console.error(err);
+      setMsg({ type: "error", text: "Failed to submit loan." });
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
-  };
+  }
 
   return (
-    <div className="form-page">
-      <h2>Loan Application</h2>
+    <div className="loan-page">
+      <h2>Apply for a Loan</h2>
+      <form className="loan-form" onSubmit={submitLoan}>
+        <label>Amount (USD)</label>
+        <input value={amount} onChange={(e) => setAmount(e.target.value)} placeholder="0.00" inputMode="decimal" disabled={loading} />
 
-      <form onSubmit={handleSubmit}>
-        <label>Loan Type</label>
-        <input
-          value={form.loanType}
-          onChange={(e) => update("loanType", e.target.value)}
-          required
-        />
+        <label>Term (months)</label>
+        <select value={termMonths} onChange={(e) => setTermMonths(e.target.value)} disabled={loading}>
+          <option value="6">6 months</option>
+          <option value="12">12 months</option>
+          <option value="24">24 months</option>
+          <option value="36">36 months</option>
+        </select>
 
-        <label>Amount</label>
-        <input
-          type="number"
-          value={form.amount}
-          onChange={(e) => update("amount", e.target.value)}
-          required
-        />
+        <label>Purpose</label>
+        <input value={purpose} onChange={(e) => setPurpose(e.target.value)} placeholder="E.g., home improvement" disabled={loading} />
 
-        <label>Duration (Months)</label>
-        <input
-          type="number"
-          value={form.durationMonths}
-          onChange={(e) => update("durationMonths", e.target.value)}
-          required
-        />
+        <button type="submit" disabled={loading}>{loading ? "Submitting..." : "Apply"}</button>
 
-        <label>Monthly Income</label>
-        <input
-          type="number"
-          value={form.income}
-          onChange={(e) => update("income", e.target.value)}
-        />
-
-        <label>Employment Status</label>
-        <input
-          value={form.employment}
-          onChange={(e) => update("employment", e.target.value)}
-        />
-
-        <label>Document URL (Optional)</label>
-        <input
-          value={form.documentUrl}
-          onChange={(e) => update("documentUrl", e.target.value)}
-        />
-
-        <label>Note</label>
-        <textarea
-          value={form.note}
-          onChange={(e) => update("note", e.target.value)}
-        />
-
-        <button type="submit" disabled={loading}>
-          {loading ? "Submitting..." : "Apply for Loan"}
-        </button>
+        {msg && <p className={`msg ${msg.type}`}>{msg.text}</p>}
       </form>
-
-      {msg && <p className="form-msg">{msg}</p>}
     </div>
   );
-};
-
-export default LoanApply;
+}

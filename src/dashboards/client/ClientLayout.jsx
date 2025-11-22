@@ -1,44 +1,27 @@
 // src/dashboards/client/ClientLayout.jsx
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
-import { useAuth } from "../../context/AuthContext";
-import Sidebar from "./components/Sidebar";
-import Topbar from "./components/Topbar";
+import { Outlet } from "react-router-dom";
+import ClientSidebar from "./components/ClientSidebar";
+import ClientTopbar from "./components/ClientTopbar";
 import "./client.css";
+import { useAuth } from "../../context/AuthContext";
+import Spinner from "../../components/Spinner.jsx";
 
 export default function ClientLayout() {
-  const { userData, loading } = useAuth();
+  const { currentUser, userProfile, loading } = useAuth();
 
-  // Show loading spinner while userData is loading
-  if (loading || userData === undefined) {
-    return (
-      <div className="loading-screen">
-        <p>Loading client dashboard...</p>
-      </div>
-    );
-  }
+  if (loading) return <Spinner />;
+  if (!currentUser) return <div>Please log in</div>;
 
-  // User not logged in (no userData) → redirect to login
-  if (!userData) {
-    return <Navigate to="/login" replace />;
-  }
-
-  // Wrong role → redirect to admin
-  if (userData.role !== "client") {
-    return <Navigate to="/admin" replace />;
-  }
-
-  // Everything is fine → render client dashboard
   return (
     <div className="client-layout">
-      <Sidebar />
+      <ClientSidebar />
 
-      <div className="client-content">
-        <Topbar />
-
-        <main className="client-main">
+      <div className="client-main">
+        <ClientTopbar user={userProfile} />
+        <div className="client-content">
           <Outlet />
-        </main>
+        </div>
       </div>
     </div>
   );

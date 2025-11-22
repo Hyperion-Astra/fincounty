@@ -1,0 +1,10 @@
+.pending-tx-page { padding:24px; max-width:900px; margin:auto; }
+.tx-table { width:100%; border-collapse:collapse; margin-top:16px; }
+.tx-table th, .tx-table td { border:1px solid #ddd; padding:8px; text-align:center; }
+.tx-table th { background:#f3f4f6; font-weight:600; }
+.tx-table button { margin:0 4px; padding:6px 10px; border:none; border-radius:6px; cursor:pointer; }
+.tx-table button:first-of-type { background:#10b981; color:#fff; }
+.tx-table button:last-of-type { background:#ef4444; color:#fff; }
+.msg { margin:12px 0; padding:10px; border-radius:8px; }
+.msg.success { background:#ecfdf5; color:#065f46; }
+.msg.error { background:#fff1f2; color:#9f1239; }

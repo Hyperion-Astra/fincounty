@@ -61,6 +61,7 @@ import Profile from "./dashboards/client/Profile";
 import ClientLoans from "./dashboards/client/ClientLoans";
 import Withdraw from "./dashboards/client/Withdraw";
 import WithdrawHistory from "./dashboards/client/WithdrawHistory";
+import PayBills from "./dashboards/client/PayBills";
 
 // Admin Dashboard
 import AdminLayout from "./dashboards/admin/AdminLayout";
@@ -68,6 +69,8 @@ import AdminHome from "./dashboards/admin/pages/AdminHome";
 import UserList from "./dashboards/admin/pages/UserList";
 import LoansAdmin from "./dashboards/admin/pages/LoansAdmin";
 import WithdrawalsAdmin from "./dashboards/admin/pages/WithdrawalsAdmin";
+import PendingTransactions from "./dashboards/admin/pages/PendingTransactions";
+import AdjustBalance from "./dashboards/admin/pages/AdjustBalance"
 
 // 🔥 Wrapper so we can use useLocation outside Router
 function AppContent() {
@@ -75,7 +78,7 @@ function AppContent() {
   const hideLayout =
     location.pathname.startsWith("/dashboard") ||
     location.pathname.startsWith("/admin") ||
-    location.pathname.startsWith("/kyc");
+    location.pathname.startsWith("/kyc/");
 
   return (
     <>
@@ -142,6 +145,7 @@ function AppContent() {
           <Route path="loans" element={<ClientLoans />} />
           <Route path="withdraw" element={<Withdraw />} />
           <Route path="withdraw-history" element={<WithdrawHistory />} />
+          <Route path="pay-bills" element={<PayBills />} />
         </Route>
 
         {/* Admin Dashboard */}
@@ -157,6 +161,8 @@ function AppContent() {
           <Route path="user-list" element={<UserList />} />
           <Route path="loans" element={<LoansAdmin />} />
           <Route path="withdrawals" element={<WithdrawalsAdmin />} />
+          <Route path="pending-transactions" element={<PendingTransactions />} />
+          <Route path="adjust-balance" element={<AdjustBalance />} /> 
         </Route>
 
         {/* Catch-all */}

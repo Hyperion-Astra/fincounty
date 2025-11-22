@@ -14,17 +14,11 @@ const Login = () => {
   const handleLogin = async (e) => {
     e.preventDefault();
     setError("");
-
     try {
-      // Firebase Auth login
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // ========= 🔥 FETCH USER FIRESTORE DATA =========
       const userDoc = await getDoc(doc(db, "users", user.uid));
-      const kycDoc = await getDoc(doc(db, "kyc", user.uid));
-      const accountDoc = await getDoc(doc(db, "accounts", user.uid));
-
       if (!userDoc.exists()) {
         setError("User record not found. Contact support.");
         return;
@@ -38,29 +32,18 @@ const Login = () => {
         return;
       }
 
-      // ========= 🔥 SOFT FLOW LOGIC =========
-      // Save KYC + ACCOUNT STATUS for dashboard banners
-      localStorage.setItem(
-        "bankMeta",
-        JSON.stringify({
-          kycCompleted: kycDoc.exists(),
-          accountsCreated: accountDoc.exists(),
-        })
-      );
-
-      // Normal user → dashboard
-      navigate("/dashboard");
-
-    } catch (err) {
-      console.error("Login error:", err);
-
-      if (err.code === "auth/user-not-found") {
-        setError("No user found with this email.");
-      } else if (err.code === "auth/wrong-password") {
-        setError("Incorrect password.");
-      } else {
-        setError("Login failed. Try again.");
+      // User → check KYC
+      const kycDoc = await getDoc(doc(db, "kyc", user.uid));
+      if (!kycDoc.exists()) {
+        navigate(`/kyc/${user.uid}`);
+        return;
       }
+
+      // User dashboard
+      navigate("/dashboard");
+    } catch (err) {
+      console.error(err);
+      setError("Login failed. Check credentials.");
     }
   };
 
@@ -68,36 +51,17 @@ const Login = () => {
     <div className="auth-page">
       <div className="auth-container">
         <h2>Welcome Back</h2>
-        <p>Login to access your account</p>
-
+        {error && <p className="error-message">{error}</p>}
         <form onSubmit={handleLogin}>
           <div className="input-group">
             <label>Email Address</label>
-            <input
-              type="email"
-              placeholder="Enter your email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-            />
+            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
           </div>
-
           <div className="input-group">
             <label>Password</label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-            />
+            <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
           </div>
-
-          {error && <p className="error-message">{error}</p>}
-
-          <button type="submit" className="auth-btn">
-            Login
-          </button>
+          <button type="submit" className="auth-btn">Login</button>
         </form>
       </div>
     </div>

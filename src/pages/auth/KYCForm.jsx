@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { db, storage } from "../../firebase";
+import { db } from "../../firebase";
 import { doc, setDoc, getDoc, serverTimestamp } from "firebase/firestore";
 import "./KYCForm.css";
 
@@ -49,12 +49,10 @@ export default function KYCForm() {
     return { account, routing };
   }
 
-
   async function handleSubmit(e) {
     e.preventDefault();
     setLoading(true);
     try {
-
       const { account, routing } = generateAccountNumbers();
 
       const kycDoc = {
@@ -85,9 +83,8 @@ export default function KYCForm() {
 
       setSuccess(true);
       setTimeout(() => {
-        navigate("/login");
-      }, 2500);
-
+        navigate("/dashboard"); // after KYC, go to user dashboard
+      }, 2000);
     } catch (err) {
       console.error(err);
       alert(err.message);
@@ -99,15 +96,8 @@ export default function KYCForm() {
   return (
     <div className="kyc-container">
       <h2>Complete your KYC</h2>
-
-      {success && (
-        <div className="kyc-success">
-          KYC submitted successfully! Redirecting to login...
-        </div>
-      )}
-
+      {success && <div className="kyc-success">KYC submitted successfully! Redirecting...</div>}
       <form onSubmit={handleSubmit} className="kyc-form">
-
         {/* Personal info */}
         <div className="kyc-grid kyc-grid-2">
           <div>
@@ -151,8 +141,7 @@ export default function KYCForm() {
             <label>ID type</label>
             <select value={form.idType} onChange={e => update('idType', e.target.value)}>
               <option value="driver_license">Driver's License</option>
-              <option value="passport">Passport</option>
-              <option value="state_id">State ID</option>
+              <option value="state_id">Government Issued ID</option>
             </select>
           </div>
           <div>

@@ -5,18 +5,23 @@ import { useAuth } from "../context/AuthContext";
 export default function ClientRoute({ children }) {
   const { currentUser, userProfile, loading } = useAuth();
 
-  // Still loading (Auth or Firestore)
+  // 1. Still loading Firebase Auth or Firestore doc
   if (loading) {
     return <div className="route-loading">Loading...</div>;
   }
 
-  // Not logged in
+  // 2. Not logged in
   if (!currentUser) {
     return <Navigate to="/login" replace />;
   }
 
-  // Firestore doc not found or role mismatch
-  if (!userProfile || userProfile.role !== "client") {
+  // 3. Firestore finished loading but no profile EXISTS
+  if (userProfile === null) {
+    return <Navigate to="/login" replace />;
+  }
+
+  // 4. Logged in but wrong role
+  if (userProfile.role !== "client") {
     return <Navigate to="/admin" replace />;
   }
 

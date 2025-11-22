@@ -1,29 +1,19 @@
-// src/dashboards/admin/components/AdminSidebar.js
+// src/dashboards/admin/components/AdminSidebar.jsx
 import React from "react";
 import { NavLink } from "react-router-dom";
-import { FiHome, FiUsers, FiCreditCard, FiSend, FiLogOut } from "react-icons/fi";
-import { useContext } from "react";
-import { useAuth } from "../../../context/AuthContext";
 
-const AdminSidebar = () => {
-  const { logout } = useAuth();
-
+export default function AdminSidebar() {
   return (
-    <aside className="admin-sidebar">
-      <div className="sidebar-header">Admin Panel</div>
-
-      <nav className="sidebar-nav">
-        <NavLink to="/admin"><FiHome /> Overview</NavLink>
-        <NavLink to="/admin/users"><FiUsers /> Users</NavLink>
-        <NavLink to="/admin/loans"><FiCreditCard /> Loans</NavLink>
-        <NavLink to="/admin/withdrawals"><FiSend /> Withdrawals</NavLink>
+    <div className="admin-sidebar">
+      <h3>Admin Panel</h3>
+      <nav>
+        <NavLink to="/admin" end>Dashboard</NavLink>
+        <NavLink to="/admin/user-list">Users</NavLink>
+        <NavLink to="/admin/loans">Loans</NavLink>
+        <NavLink to="/admin/withdrawals">Withdrawals</NavLink>
+        <NavLink to="/admin/pending-transactions">Pending Transactions</NavLink>
+        <NavLink to="/admin/adjust-balance">Adjust Balance</NavLink>
       </nav>
-
-      <button className="sidebar-logout" onClick={logout}>
-        <FiLogOut /> Logout
-      </button>
-    </aside>
+    </div>
   );
-};
-
-export default AdminSidebar;
+}

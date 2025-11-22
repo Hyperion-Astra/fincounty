@@ -1,0 +1,7 @@
+.adjust-page { max-width:640px; margin:auto; padding:24px; }
+.adjust-form { display:flex; flex-direction:column; gap:10px; background:#fff; padding:18px; border-radius:12px; box-shadow:0 8px 30px rgba(2,6,23,0.06); }
+.adjust-form input, .adjust-form select { padding:10px; border-radius:8px; border:1px solid #e6e9ee; }
+.adjust-form button { margin-top:8px; padding:10px; border-radius:8px; background:#3b82f6; color:#fff; border:none; cursor:pointer; }
+.msg { margin-top:12px; padding:10px; border-radius:8px; }
+.msg.success { background:#ecfdf5; color:#065f46; }
+.msg.error { background:#fff1f2; color:#9f1239; }

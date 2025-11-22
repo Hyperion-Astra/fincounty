@@ -16,7 +16,6 @@ import {
   doc,
   onSnapshot,
   setDoc,
-  getDoc,
   serverTimestamp,
 } from "firebase/firestore";
 
@@ -48,7 +47,6 @@ export function AuthProvider({ children }) {
       setCurrentUser(user);
 
       if (user) {
-        // Load Firestore profile
         const userRef = doc(db, "users", user.uid);
 
         const unsubscribeProfile = onSnapshot(userRef, (snap) => {
@@ -57,17 +55,17 @@ export function AuthProvider({ children }) {
           } else {
             setUserProfile(null);
           }
+
           setProfileLoading(false);
+          setLoading(false); // <-- IMPORTANT FIX
         });
 
-        // Cleanup Firestore listener when logging out
         return () => unsubscribeProfile();
       } else {
         setUserProfile(null);
         setProfileLoading(false);
+        setLoading(false); // <-- ALSO IMPORTANT
       }
-
-      setLoading(false);
     });
 
     return unsub;
@@ -79,28 +77,24 @@ export function AuthProvider({ children }) {
   // REGISTER (email + password + user doc)
   // --------------------------------------
   async function register(email, password, displayName) {
-    // Create account
     const cred = await createUserWithEmailAndPassword(
       auth,
       email,
       password
     );
 
-    // Send verification email
     await sendEmailVerification(cred.user);
 
-    // Prepare user doc for Firestore
     const userDoc = {
       email,
       displayName: displayName || "",
       role: "client",
-      kycStatus: "incomplete",     // until they  SSN + ID + selfie
-      onboardingStep: 1,           // step-by-step flow
+      kycStatus: "incomplete",
+      onboardingStep: 1,
       emailVerified: false,
       createdAt: serverTimestamp(),
     };
 
-    // Save to Firestore
     await setDoc(doc(db, "users", cred.user.uid), userDoc, { merge: true });
 
     return cred;
@@ -114,7 +108,7 @@ export function AuthProvider({ children }) {
   const value = {
     currentUser,
     userProfile,
-    loading: loading || profileLoading, // route guards wait for both
+    loading: loading || profileLoading,
     register,
   };
 

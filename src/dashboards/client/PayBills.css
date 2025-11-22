@@ -1,0 +1,115 @@
+.paybills-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.paybills-container h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-bottom: 1rem;
+  color: #4a4a4a;
+}
+
+.balance {
+  text-align: center;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+.balance span {
+  font-weight: bold;
+  color: #6b46c1;
+}
+
+.paybills-form {
+  display: flex;
+  flex-direction: column;
+}
+
+.bill-cards {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+}
+
+.bill-card {
+  flex: 1 1 45%;
+  margin: 0.5rem;
+  padding: 1rem;
+  background: #f7f7f7;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.bill-card:hover {
+  background: #ece7ff;
+  border-color: #6b46c1;
+}
+
+.bill-card.selected {
+  border-color: #6b46c1;
+  background: #e9d8fd;
+}
+
+.bill-icon {
+  font-size: 2rem;
+  color: #6b46c1;
+  margin-bottom: 0.5rem;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+  display: block;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.pay-button {
+  background: #6b46c1;
+  color: white;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.3s ease;
+  margin-top: 1rem;
+}
+
+.pay-button:hover {
+  background: #553c9a;
+}
+
+.form-message {
+  margin-top: 0.5rem;
+  font-weight: 500;
+  color: green;
+}
+
+@media screen and (max-width: 500px) {
+  .bill-cards {
+    flex-direction: column;
+  }
+  .bill-card {
+    flex: 1 1 100%;
+  }
+}
