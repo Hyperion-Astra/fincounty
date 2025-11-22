@@ -1,5 +1,5 @@
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useNavigate } from "react-router-dom";
 import {
   Home,
   Wallet,
@@ -12,11 +12,24 @@ import {
   Menu,
   X,
   User,
-  Shield
+  LogOut
 } from "lucide-react";
+import { auth } from "../../../firebase"; // make sure path is correct
+import { signOut } from "firebase/auth";
 import "./Sidebar.css";
 
-export default function ClientSidebar({ isAdmin, isOpen, toggleSidebar }) {
+export default function ClientSidebar({ isOpen, toggleSidebar }) {
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      navigate("/login", { replace: true });
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
+
   return (
     <>
       {/* Mobile overlay */}
@@ -74,15 +87,11 @@ export default function ClientSidebar({ isAdmin, isOpen, toggleSidebar }) {
             <span>Profile</span>
           </NavLink>
 
-          {isAdmin && (
-            <>
-              <hr className="sidebar-divider" />
-              <NavLink to="/admin" className="sidebar-link admin-link">
-                <Shield size={18} />
-                <span>Admin Panel</span>
-              </NavLink>
-            </>
-          )}
+          {/* Logout button */}
+          <button className="sidebar-link logout-btn" onClick={handleLogout}>
+            <LogOut size={18} />
+            <span>Logout</span>
+          </button>
         </nav>
       </aside>
 

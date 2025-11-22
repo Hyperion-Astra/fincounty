@@ -1,88 +1,63 @@
-import React, {
-  createContext,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
-
+import React, { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { auth, db } from "../firebase";
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
   sendEmailVerification,
 } from "firebase/auth";
+import { doc, onSnapshot, setDoc, serverTimestamp } from "firebase/firestore";
 
-import {
-  doc,
-  onSnapshot,
-  setDoc,
-  serverTimestamp,
-} from "firebase/firestore";
-
-
-// ------------------------
-// CONTEXT SETUP
-// ------------------------
 const AuthContext = createContext();
+
 export function useAuth() {
   return useContext(AuthContext);
 }
 
-
-// ------------------------
-// PROVIDER
-// ------------------------
 export function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);       // firebase auth user
-  const [userProfile, setUserProfile] = useState(null);       // firestore user doc
-  const [loading, setLoading] = useState(true);               // gate for routes
-  const [profileLoading, setProfileLoading] = useState(true); // firestore listener
+  const [currentUser, setCurrentUser] = useState(null);
+  const [userProfile, setUserProfile] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-
-  // --------------------------------------
-  // AUTH LISTENER (checks Firebase Auth)
-  // --------------------------------------
   useEffect(() => {
-    const unsub = onAuthStateChanged(auth, async (user) => {
+    let unsubscribeProfile = null;
+
+    const unsubscribeAuth = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
 
-      if (user) {
-        const userRef = doc(db, "users", user.uid);
+      if (!user) {
+        setUserProfile(null);
+        setLoading(false);
+        return;
+      }
 
-        const unsubscribeProfile = onSnapshot(userRef, (snap) => {
-          if (snap.exists()) {
-            setUserProfile(snap.data());
-          } else {
-            setUserProfile(null);
+      const userRef = doc(db, "users", user.uid);
+
+      // Only subscribe once
+      if (unsubscribeProfile) unsubscribeProfile();
+
+      unsubscribeProfile = onSnapshot(userRef, (snap) => {
+        const data = snap.exists() ? snap.data() : null;
+
+        // Only update state if data actually changed (prevents infinite re-render)
+        setUserProfile((prev) => {
+          if (JSON.stringify(prev) !== JSON.stringify(data)) {
+            return data;
           }
-
-          setProfileLoading(false);
-          setLoading(false); // <-- IMPORTANT FIX
+          return prev;
         });
 
-        return () => unsubscribeProfile();
-      } else {
-        setUserProfile(null);
-        setProfileLoading(false);
-        setLoading(false); // <-- ALSO IMPORTANT
-      }
+        setLoading(false);
+      });
     });
 
-    return unsub;
+    return () => {
+      unsubscribeAuth();
+      if (unsubscribeProfile) unsubscribeProfile();
+    };
   }, []);
 
-
-
-  // --------------------------------------
-  // REGISTER (email + password + user doc)
-  // --------------------------------------
-  async function register(email, password, displayName) {
-    const cred = await createUserWithEmailAndPassword(
-      auth,
-      email,
-      password
-    );
-
+  const register = async (email, password, displayName) => {
+    const cred = await createUserWithEmailAndPassword(auth, email, password);
     await sendEmailVerification(cred.user);
 
     const userDoc = {
@@ -96,21 +71,18 @@ export function AuthProvider({ children }) {
     };
 
     await setDoc(doc(db, "users", cred.user.uid), userDoc, { merge: true });
-
     return cred;
-  }
-
-
-
-  // --------------------------------------
-  // CONTEXT EXPORT
-  // --------------------------------------
-  const value = {
-    currentUser,
-    userProfile,
-    loading: loading || profileLoading,
-    register,
   };
+
+  const value = useMemo(
+    () => ({
+      currentUser,
+      userProfile,
+      loading,
+      register,
+    }),
+    [currentUser, userProfile, loading]
+  );
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

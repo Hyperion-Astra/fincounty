@@ -1,4 +1,3 @@
-// src/dashboards/client/Profile.jsx
 import React, { useEffect, useState } from "react";
 import { db } from "../../firebase";
 import { doc, getDoc, setDoc, updateDoc } from "firebase/firestore";
@@ -6,8 +5,7 @@ import { useAuth } from "../../context/AuthContext";
 import "./Profile.css";
 
 export default function Profile() {
-  const { currentUser } = useAuth();
-  const [userData, setUserData] = useState(null);
+  const { currentUser, userProfile } = useAuth();
   const [accountData, setAccountData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -19,19 +17,17 @@ export default function Profile() {
     email: "",
   });
 
-  // Helper to generate account numbers
   const generateAccountNumber = () => Math.floor(1000000000 + Math.random() * 9000000000).toString();
   const generateRoutingNumber = () => Math.floor(100000000 + Math.random() * 900000000).toString();
 
   useEffect(() => {
-    if (!currentUser) return;
+    if (!currentUser || !userProfile) return;
 
     async function fetchData() {
       try {
         const userRef = doc(db, "users", currentUser.uid);
         const userSnap = await getDoc(userRef);
         if (userSnap.exists()) {
-          setUserData(userSnap.data());
           setEditable({
             displayName: userSnap.data().displayName || "",
             phone: userSnap.data().phone || "",
@@ -42,20 +38,30 @@ export default function Profile() {
         const accountRef = doc(db, "accounts", currentUser.uid);
         const accountSnap = await getDoc(accountRef);
 
+        let updatedAccountData;
         if (!accountSnap.exists()) {
-          // Generate accounts if not exist
-          const newAccount = {
+          updatedAccountData = {
             checkingAccountNumber: generateAccountNumber(),
             savingsAccountNumber: generateAccountNumber(),
             routingNumber: generateRoutingNumber(),
             checkingBalance: 0,
             savingsBalance: 0,
           };
-          await setDoc(accountRef, newAccount);
-          setAccountData(newAccount);
+          await setDoc(accountRef, updatedAccountData);
         } else {
-          setAccountData(accountSnap.data());
+          const existing = accountSnap.data();
+          updatedAccountData = {
+            checkingAccountNumber: existing.checkingAccountNumber || generateAccountNumber(),
+            savingsAccountNumber: existing.savingsAccountNumber || generateAccountNumber(),
+            routingNumber: existing.routingNumber || generateRoutingNumber(),
+            checkingBalance: existing.checkingBalance ?? 0,
+            savingsBalance: existing.savingsBalance ?? 0,
+          };
+          await setDoc(accountRef, updatedAccountData, { merge: true });
         }
+
+        setAccountData(updatedAccountData);
+
       } catch (err) {
         console.error("Error fetching profile:", err);
       } finally {
@@ -64,13 +70,11 @@ export default function Profile() {
     }
 
     fetchData();
-  }, [currentUser]);
+  }, [currentUser, userProfile]);
 
   if (loading) return <div className="profile-loading">Loading profile...</div>;
 
-  const handleChange = (e) => {
-    setEditable(prev => ({ ...prev, [e.target.name]: e.target.value }));
-  };
+  const handleChange = (e) => setEditable(prev => ({ ...prev, [e.target.name]: e.target.value }));
 
   const handleSave = async () => {
     if (!currentUser) return;
@@ -78,12 +82,7 @@ export default function Profile() {
     setFeedback("");
     try {
       const userRef = doc(db, "users", currentUser.uid);
-      await updateDoc(userRef, {
-        displayName: editable.displayName,
-        phone: editable.phone,
-        email: editable.email,
-      });
-      setUserData(prev => ({ ...prev, ...editable }));
+      await updateDoc(userRef, editable);
       setFeedback("Profile updated successfully.");
     } catch (err) {
       console.error(err);
@@ -98,53 +97,32 @@ export default function Profile() {
       <h2>My Profile</h2>
 
       <div className="profile-grid">
-        {/* Personal Info */}
         <div className="profile-card personal-info">
           <h3>Personal Information</h3>
           <div className="profile-item">
             <span>Name</span>
-            <input
-              type="text"
-              name="displayName"
-              value={editable.displayName}
-              onChange={handleChange}
-            />
+            <input name="displayName" value={editable.displayName} onChange={handleChange} />
           </div>
           <div className="profile-item">
             <span>Email</span>
-            <input
-              type="email"
-              name="email"
-              value={editable.email}
-              onChange={handleChange}
-            />
+            <input name="email" value={editable.email} onChange={handleChange} />
           </div>
           <div className="profile-item">
             <span>Phone</span>
-            <input
-              type="text"
-              name="phone"
-              value={editable.phone}
-              onChange={handleChange}
-            />
+            <input name="phone" value={editable.phone} onChange={handleChange} />
           </div>
           <div className="profile-item">
             <span>KYC Status</span>
-            <strong className={`kyc-status ${userData.kycStatus?.toLowerCase()}`}>
-              {userData.kycStatus || "Pending"}
+            <strong className={`kyc-status ${userProfile.kycStatus?.toLowerCase()}`}>
+              {userProfile.kycStatus || "Pending"}
             </strong>
           </div>
-          <button
-            onClick={handleSave}
-            disabled={saving}
-            className="save-btn"
-          >
+          <button onClick={handleSave} disabled={saving}>
             {saving ? "Saving..." : "Save Changes"}
           </button>
           {feedback && <p className="profile-feedback">{feedback}</p>}
         </div>
 
-        {/* Accounts Info */}
         <div className="profile-card account-info">
           <h3>Account Details</h3>
           {accountData ? (
@@ -155,7 +133,7 @@ export default function Profile() {
               </div>
               <div className="profile-item">
                 <span>Checking Balance</span>
-                <strong>${(accountData.checkingBalance ?? 0).toLocaleString()}</strong>
+                <strong>${accountData.checkingBalance.toLocaleString()}</strong>
               </div>
               <div className="profile-item">
                 <span>Savings Account</span>
@@ -163,7 +141,7 @@ export default function Profile() {
               </div>
               <div className="profile-item">
                 <span>Savings Balance</span>
-                <strong>${(accountData.savingsBalance ?? 0).toLocaleString()}</strong>
+                <strong>${accountData.savingsBalance.toLocaleString()}</strong>
               </div>
               <div className="profile-item">
                 <span>Routing Number</span>

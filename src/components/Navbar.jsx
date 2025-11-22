@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
 
@@ -58,7 +58,6 @@ const MENU = [
   }
 ];
 
-// External links (My Account menu)
 const MY_ACCOUNT_LINKS = [
   { path: "/register", label: "Register" },
   { path: "/login", label: "Login" }
@@ -67,6 +66,30 @@ const MY_ACCOUNT_LINKS = [
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [openMenu, setOpenMenu] = useState(null);
+  const mobileMenuRef = useRef(null);
+
+  // Close mobile menu when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (
+        mobileMenuRef.current &&
+        !mobileMenuRef.current.contains(event.target) &&
+        !event.target.classList.contains("mobile-toggle")
+      ) {
+        setMobileOpen(false);
+      }
+    };
+
+    if (mobileOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [mobileOpen]);
 
   return (
     <header className="nav-header">
@@ -114,18 +137,12 @@ export default function Navbar() {
             onMouseEnter={() => setOpenMenu("account")}
             onMouseLeave={() => setOpenMenu(null)}
           >
-            <button className="account-btn">
-              My Account ▾
-            </button>
+            <button className="account-btn">My Account ▾</button>
 
             {openMenu === "account" && (
               <div className="dropdown right">
                 {MY_ACCOUNT_LINKS.map((item, i) => (
-                  <Link
-                    key={i}
-                    to={item.path}
-                    className="dropdown-link"
-                  >
+                  <Link key={i} to={item.path} className="dropdown-link">
                     {item.label}
                   </Link>
                 ))}
@@ -133,7 +150,10 @@ export default function Navbar() {
             )}
           </div>
 
-          <button className="mobile-toggle" onClick={() => setMobileOpen(!mobileOpen)}>
+          <button
+            className="mobile-toggle"
+            onClick={() => setMobileOpen(!mobileOpen)}
+          >
             ☰
           </button>
         </div>
@@ -141,7 +161,7 @@ export default function Navbar() {
 
       {/* Mobile Menu */}
       {mobileOpen && (
-        <div className="mobile-menu">
+        <div className="mobile-menu" ref={mobileMenuRef}>
           {MENU.map((menu) => (
             <details key={menu.key} className="mobile-dropdown">
               <summary>{menu.label}</summary>

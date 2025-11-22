@@ -10,7 +10,6 @@ export default function ClientLayout() {
   const { currentUser, userProfile, loading } = useAuth();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
-
   // Prevent flashing while loading
   if (loading) return <Spinner />;
 
@@ -20,14 +19,15 @@ export default function ClientLayout() {
   return (
     <div className="client-layout">
       <ClientSidebar
-  isAdmin={userProfile?.role === "admin"}
-  isOpen={sidebarOpen}
-  toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
-/>
-
+        isOpen={sidebarOpen}
+        toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+      />
 
       <div className="client-main-area">
-      <ClientTopbar user={userProfile} toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+        <ClientTopbar 
+          user={userProfile} 
+          toggleSidebar={() => setSidebarOpen(!sidebarOpen)} 
+        />
         <div className="client-content-wrapper">
           <Outlet />
         </div>

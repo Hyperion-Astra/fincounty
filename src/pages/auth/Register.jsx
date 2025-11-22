@@ -25,7 +25,7 @@ export default function Register() {
       await setDoc(doc(db, "users", uid), {
         displayName,
         email,
-        role: "user",
+        role: "client",
         kycStatus: "pending"
       });
 
@@ -56,7 +56,7 @@ export default function Register() {
           <label>Password</label>
           <input value={password} onChange={e => setPassword(e.target.value)} type="password" required disabled={loading} />
         </div>
-        <button type="submit" disabled={loading} classname ="submit-btn">
+        <button type="submit" disabled={loading} className ="submit-btn">
           {loading ? "Creating account..." : "Create account"}
         </button>
       </form>

@@ -3,24 +3,24 @@ import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
 export default function ClientRoute({ children }) {
-  const { currentUser, userProfile, loading } = useAuth();
+  const { currentUser, userProfile, loadingUser, loadingProfile } = useAuth();
 
-  // 1. Still loading Firebase Auth or Firestore doc
-  if (loading) {
-    return <div className="route-loading">Loading...</div>;
+  // Wait for both Firebase Auth + Firestore to finish loading
+  if (loadingUser || loadingProfile) {
+    return <div>Loading...</div>;
   }
 
-  // 2. Not logged in
+  // If not logged in → go to login
   if (!currentUser) {
     return <Navigate to="/login" replace />;
   }
 
-  // 3. Firestore finished loading but no profile EXISTS
-  if (userProfile === null) {
+  // If profile still doesn't exist after loading → block
+  if (!userProfile) {
     return <Navigate to="/login" replace />;
   }
 
-  // 4. Logged in but wrong role
+  // If not client → send to admin
   if (userProfile.role !== "client") {
     return <Navigate to="/admin" replace />;
   }

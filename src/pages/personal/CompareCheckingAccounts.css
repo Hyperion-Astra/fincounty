@@ -1,21 +1,191 @@
-/* CompareCheckingAccounts.css */
-.pc-compare { font-family:var(--font-sans, Poppins, sans-serif); color:var(--text,#0b2545); background:var(--page-bg,#f6f7fb); }
-.pc-compare-hero { padding:56px 5%; text-align:center; background:transparent; }
-.pc-compare-hero h1 { font-size:2.2rem; margin-bottom:6px; }
-.pc-compare-hero p { color:#556777; margin:0; }
+/* ---------- PAGE WRAPPER ---------- */
+.pc-compare {
+  font-family: var(--font-sans, Poppins, sans-serif);
+  color: var(--text, #0b2545);
+  background: var(--page-bg, #f6f7fb);
+}
 
-.pc-container { max-width:1200px; margin:0 auto; }
+/* ---------- HERO ---------- */
+.pc-compare-hero {
+  padding: 60px 5%;
+  text-align: center;
+  background: transparent;
+}
 
-.pc-table { width:100%; border-collapse:collapse; background:#fff; border-radius:10px; overflow:hidden; box-shadow:0 10px 30px rgba(8,26,46,0.06); }
-.pc-table thead th { background:#f6f8fb; padding:14px 18px; text-align:left; font-weight:700; color:#0b2545; }
-.pc-table td { padding:14px 18px; border-top:1px solid #eef2f6; color:#465a6a; }
+.pc-compare-hero h1 {
+  font-size: 2.4rem;
+  margin-bottom: 8px;
+}
 
-.pc-compare-cta { margin-top:18px; display:flex; gap:12px; justify-content:center; padding:18px 0; }
+.pc-compare-hero p {
+  color: #556777;
+  font-size: 1.1rem;
+  margin: 0;
+}
 
-@media (max-width:900px) {
-  .pc-table thead { display:none; }
-  .pc-table, .pc-table tbody, .pc-table tr, .pc-table td { display:block; width:100%; }
-  .pc-table tr { margin-bottom:12px; }
-  .pc-table td { padding:8px 12px; }
-  .pc-table td:first-child { font-weight:700; color:#0b2545; }
+/* ---------- CONTAINER ---------- */
+.pc-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 16px;
+}
+
+/* ---------- TABLE ---------- */
+.pc-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(8, 26, 46, 0.06);
+  transition: all 0.3s ease;
+}
+
+.pc-table thead th {
+  background: #f6f8fb;
+  padding: 14px 18px;
+  text-align: left;
+  font-weight: 700;
+  color: #0b2545;
+}
+
+.pc-table tbody td {
+  padding: 14px 18px;
+  border-top: 1px solid #eef2f6;
+  color: #465a6a;
+  transition: background 0.25s ease;
+}
+
+/* Row hover effect for desktop */
+.pc-table tbody tr:hover td {
+  background: #f1f5f9;
+}
+
+/* ---------- CTA BUTTONS ---------- */
+.pc-compare-cta {
+  margin-top: 24px;
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  flex-wrap: wrap;
+  padding: 20px 0;
+}
+
+.pc-btn {
+  padding: 14px 32px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  text-align: center;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.pc-btn-primary {
+  background: #1a5ab3;
+  color: white;
+  border: none;
+}
+
+.pc-btn-primary:hover {
+  background: #003f89;
+}
+
+.pc-btn-ghost {
+  background: transparent;
+  color: #1a5ab3;
+  border: 2px solid #1a5ab3;
+}
+
+.pc-btn-ghost:hover {
+  background: #1a5ab3;
+  color: white;
+}
+
+/* ------------------------
+   RESPONSIVE TABLE
+------------------------- */
+@media (max-width: 900px) {
+  .pc-table thead {
+    display: none;
+  }
+
+  .pc-table, .pc-table tbody, .pc-table tr, .pc-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .pc-table tr {
+    margin-bottom: 16px;
+    border: 1px solid #eef2f6;
+    border-radius: 8px;
+    padding: 12px;
+    background: #fff;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.04);
+  }
+
+  .pc-table td {
+    padding: 8px 12px;
+    border: none;
+    position: relative;
+    text-align: left;
+  }
+
+  .pc-table td:first-child {
+    font-weight: 700;
+    color: #0b2545;
+    margin-bottom: 6px;
+  }
+
+  /* Add label before each td for clarity on mobile */
+  .pc-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #556777;
+    display: block;
+    margin-bottom: 4px;
+  }
+}
+
+/* Small screen tweaks */
+@media (max-width: 600px) {
+  .pc-compare-hero h1 {
+    font-size: 2rem;
+  }
+
+  .pc-compare-hero p {
+    font-size: 1rem;
+  }
+
+  .pc-btn {
+    width: 100%;
+    max-width: 280px;
+  }
+}
+/* ---------- FULL DISCLOSURE ---------- */
+.pc-compare-disclosure {
+  padding: 40px 5%;
+  background: #f6f7fb;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: #556777;
+}
+
+.pc-compare-disclosure p {
+  margin-bottom: 12px;
+}
+
+@media (max-width: 900px) {
+  .pc-compare-disclosure {
+    padding: 30px 4%;
+    font-size: 0.88rem;
+  }
+}
+
+@media (max-width: 600px) {
+  .pc-compare-disclosure {
+    padding: 20px 3%;
+    font-size: 0.85rem;
+    line-height: 1.6;
+  }
 }
