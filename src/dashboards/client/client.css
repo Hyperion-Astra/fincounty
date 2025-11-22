@@ -37,31 +37,136 @@
   width: calc(100% - 220px);
 }
 
+/* ============================================
+   CLIENT TOPBAR
+============================================ */
 .client-topbar {
-  height: 60px;
-  background-color: #f9fafb;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 0 1.5rem;
+  height: 70px;
+  background: #ffffff;
   border-bottom: 1px solid #e5e7eb;
-  position: fixed;
-  width: calc(100% - 220px);
-  z-index: 100;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 30;
 }
 
-.client-topbar-right img {
-  width: 36px;
-  height: 36px;
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.topbar-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.topbar-title span {
+  color: #2563eb;
+}
+
+.topbar-menu-btn {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  display: none;
+}
+
+/* ===============================
+   RIGHT SIDE (icons + avatar)
+=============================== */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.topbar-icon {
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  transition: 0.2s;
+}
+
+.topbar-icon:hover {
+  background: #f1f5f9;
+  border-radius: 6px;
+}
+
+/* ===============================
+   PROFILE DROPDOWN
+=============================== */
+.topbar-profile {
+  position: relative;
+  cursor: pointer;
+}
+
+.topbar-avatar {
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
+  border: 2px solid #e2e8f0;
   object-fit: cover;
-  margin-left: 0.5rem;
 }
 
-.client-content {
-  margin-top: 60px;
-  padding: 1.5rem;
+.topbar-dropdown {
+  position: absolute;
+  right: 0;
+  top: 48px;
+  width: 160px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 8px 0;
+  box-shadow: 0 4px 18px rgba(0,0,0,0.1);
+  animation: fadeIn 0.2s ease;
 }
+
+.dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.dropdown-item:hover {
+  background: #f8fafc;
+}
+
+.dropdown-item.logout {
+  color: #b91c1c;
+}
+
+.dropdown-item.logout:hover {
+  background: #fee2e2;
+}
+
+/* Fade animation */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ===============================
+   MOBILE RESPONSIVE
+=============================== */
+@media (max-width: 900px) {
+  .topbar-menu-btn {
+    display: block;
+  }
+
+  .topbar-title {
+    font-size: 17px;
+  }
+}
+
 
 /* Dashboard grid */
 .client-grid {

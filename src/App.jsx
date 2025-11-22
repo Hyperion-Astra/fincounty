@@ -62,6 +62,10 @@ import ClientLoans from "./dashboards/client/ClientLoans";
 import Withdraw from "./dashboards/client/Withdraw";
 import WithdrawHistory from "./dashboards/client/WithdrawHistory";
 import PayBills from "./dashboards/client/PayBills";
+import FundAccount from "./dashboards/client/FundAccount";
+import Transfer from "./dashboards/client/Transfer"
+import Saving from "./dashboards/client/Saving";
+import Transactions from "./dashboards/client/Transactions";
 
 // Admin Dashboard
 import AdminLayout from "./dashboards/admin/AdminLayout";
@@ -142,10 +146,16 @@ function AppContent() {
         >
           <Route index element={<ClientDashboard />} />
           <Route path="profile" element={<Profile />} />
+          <Route path="transfer" element={<Transfer />} />
           <Route path="loans" element={<ClientLoans />} />
           <Route path="withdraw" element={<Withdraw />} />
           <Route path="withdraw-history" element={<WithdrawHistory />} />
           <Route path="pay-bills" element={<PayBills />} />
+          <Route path="fund" element={<FundAccount />} />
+          <Route path="savings" element={<Saving />} />
+          <Route path="transactions" element={<Transactions />} />
+
+
         </Route>
 
         {/* Admin Dashboard */}

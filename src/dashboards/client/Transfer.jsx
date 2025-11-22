@@ -18,28 +18,23 @@ export default function Transfer() {
   const uid = currentUser?.uid;
 
   const [fromType, setFromType] = useState("checking"); // checking | savings
+  const [toType, setToType] = useState("internal"); // internal | savings | external
   const [toAccount, setToAccount] = useState(""); // destination account number
-  const [toType, setToType] = useState("internal"); // internal | external
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
   const [feedback, setFeedback] = useState(null);
 
-  // helper: parse numeric safely (digit-by-digit attention)
   function parseAmount(v) {
     const s = String(v).trim();
     if (!s) return 0;
-    // remove non-digit except dot
     const cleaned = s.replace(/[^\d.]/g, "");
-    // ensure only one dot
     const parts = cleaned.split(".");
     if (parts.length > 2) return NaN;
     let whole = parts[0] || "0";
     let frac = parts[1] || "";
-    // limit to 2 decimal places
     if (frac.length > 2) frac = frac.slice(0, 2);
-    const composed = frac ? `${whole}.${frac}` : whole;
-    return Number(composed);
+    return Number(frac ? `${whole}.${frac}` : whole);
   }
 
   async function handleSubmit(e) {
@@ -55,10 +50,10 @@ export default function Transfer() {
       setFeedback({ type: "error", text: "You must be logged in." });
       return;
     }
+
     setLoading(true);
 
     try {
-      // find source account doc for this user and account type
       const qFrom = query(
         collection(db, "accounts"),
         where("uid", "==", uid),
@@ -69,11 +64,9 @@ export default function Transfer() {
       const fromDoc = snapFrom.docs[0];
       const fromData = fromDoc.data();
 
-      // balance check
       if ((fromData.balance ?? 0) < amt) throw new Error("Insufficient funds.");
 
       if (toType === "savings" || (toType === "internal" && toAccount === fromData.accountNumber)) {
-        // internal transfer to same user's savings (or between own accounts)
         const qTo = query(
           collection(db, "accounts"),
           where("uid", "==", uid),
@@ -83,7 +76,6 @@ export default function Transfer() {
         if (snapTo.empty) throw new Error("Destination account not found.");
         const toDoc = snapTo.docs[0];
 
-        // create transaction record
         await addDoc(collection(db, "transactions"), {
           uid,
           type: "internal_transfer",
@@ -95,19 +87,16 @@ export default function Transfer() {
           createdAt: serverTimestamp(),
         });
 
-        // update balances (note: client-side concurrency risk — good enough for demo)
         await updateDoc(doc(db, "accounts", fromDoc.id), { balance: (fromData.balance ?? 0) - amt });
         await updateDoc(doc(db, "accounts", toDoc.id), { balance: (toDoc.data().balance ?? 0) + amt });
 
         setFeedback({ type: "success", text: "Transfer completed." });
       } else if (toType === "internal") {
-        // internal transfer to another user's account by account number
         const qTo = query(collection(db, "accounts"), where("accountNumber", "==", toAccount));
         const snapTo = await getDocs(qTo);
         if (snapTo.empty) throw new Error("Destination account not found.");
         const toDoc = snapTo.docs[0];
 
-        // write transaction
         await addDoc(collection(db, "transactions"), {
           uid,
           type: "transfer",
@@ -119,13 +108,11 @@ export default function Transfer() {
           createdAt: serverTimestamp(),
         });
 
-        // update balances
         await updateDoc(doc(db, "accounts", fromDoc.id), { balance: (fromData.balance ?? 0) - amt });
         await updateDoc(doc(db, "accounts", toDoc.id), { balance: (toDoc.data().balance ?? 0) + amt });
 
         setFeedback({ type: "success", text: "Transfer completed." });
       } else {
-        // external ACH transfer — create pending transaction for admin processing
         await addDoc(collection(db, "transactions"), {
           uid,
           type: "external_transfer",
@@ -136,13 +123,14 @@ export default function Transfer() {
           note,
           createdAt: serverTimestamp(),
         });
-
         setFeedback({ type: "info", text: "External transfer requested — pending processing." });
       }
 
       setAmount("");
       setToAccount("");
       setNote("");
+      setFromType("checking");
+      setToType("internal");
     } catch (err) {
       console.error(err);
       setFeedback({ type: "error", text: err.message || "Transfer failed." });
@@ -152,47 +140,59 @@ export default function Transfer() {
   }
 
   return (
-    <div className="transfer-page">
+    <div className="transfer-container">
       <h2>Send Money</h2>
       <form className="transfer-form" onSubmit={handleSubmit}>
-        <label>From</label>
-        <select value={fromType} onChange={(e) => setFromType(e.target.value)} disabled={loading}>
-          <option value="checking">Checking</option>
-          <option value="savings">Savings</option>
-        </select>
+        <div className="form-group">
+          <label>From Account</label>
+          <select value={fromType} onChange={(e) => setFromType(e.target.value)} disabled={loading}>
+            <option value="checking">Checking</option>
+            <option value="savings">Savings</option>
+          </select>
+        </div>
 
-        <label>Transfer type</label>
-        <select value={toType} onChange={(e) => setToType(e.target.value)} disabled={loading}>
-          <option value="internal">Internal (another FinBank customer)</option>
-          <option value="savings">Move to your savings</option>
-          <option value="external">External (ACH)</option>
-        </select>
+        <div className="form-group">
+          <label>Transfer Type</label>
+          <select value={toType} onChange={(e) => setToType(e.target.value)} disabled={loading}>
+            <option value="internal">Internal (FinBank customer)</option>
+            <option value="savings">Move to your savings</option>
+            <option value="external">External (ACH)</option>
+          </select>
+        </div>
 
         {toType !== "savings" && (
-          <>
-            <label>Destination account number</label>
+          <div className="form-group">
+            <label>Destination Account Number</label>
             <input
+              type="text"
               value={toAccount}
               onChange={(e) => setToAccount(e.target.value.trim())}
               placeholder="1234567890"
               disabled={loading}
             />
-          </>
+          </div>
         )}
 
-        <label>Amount (USD)</label>
-        <input
-          value={amount}
-          onChange={(e) => setAmount(e.target.value)}
-          placeholder="0.00"
-          inputMode="decimal"
-          disabled={loading}
-        />
+        <div className="form-group">
+          <label>Amount (USD)</label>
+          <input
+            type="number"
+            value={amount}
+            onChange={(e) => setAmount(e.target.value)}
+            placeholder="0.00"
+            inputMode="decimal"
+            disabled={loading}
+          />
+        </div>
 
-        <label>Note (optional)</label>
-        <input value={note} onChange={(e) => setNote(e.target.value)} disabled={loading} />
+        <div className="form-group">
+          <label>Note (Optional)</label>
+          <input value={note} onChange={(e) => setNote(e.target.value)} disabled={loading} />
+        </div>
 
-        <button type="submit" disabled={loading}>{loading ? "Processing..." : "Send"}</button>
+        <button type="submit" disabled={loading}>
+          {loading ? "Processing..." : "Send"}
+        </button>
 
         {feedback && <p className={`msg ${feedback.type}`}>{feedback.text}</p>}
       </form>

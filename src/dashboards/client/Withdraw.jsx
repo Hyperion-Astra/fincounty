@@ -1,114 +1,122 @@
-// src/dashboards/client/Withdraw.jsx
 import React, { useState, useEffect } from "react";
 import { useAuth } from "../../context/AuthContext";
 import { db } from "../../firebase";
 import { doc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import "./Withdraw.css";
 
-export default function Withdraw() {
-  const { user } = useAuth();
+const methods = [
+  { id: "bank", label: "Bank Transfer", icon: "🏦" },
+  { id: "crypto", label: "Cryptocurrency", icon: "🪙" },
+  { id: "paypal", label: "PayPal", icon: "🅿️" },
+  { id: "mobile", label: "Mobile Money", icon: "📱" },
+];
 
+export default function Withdraw() {
+  const { currentUser } = useAuth();
   const [balance, setBalance] = useState(0);
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  // Form fields
-  const [amount, setAmount] = useState("");
   const [method, setMethod] = useState("bank");
   const [accountName, setAccountName] = useState("");
   const [accountNumber, setAccountNumber] = useState("");
   const [bankName, setBankName] = useState("");
   const [swiftCode, setSwiftCode] = useState("");
   const [note, setNote] = useState("");
+  const [amount, setAmount] = useState("");
 
-  // Load user balance
   useEffect(() => {
-    if (!user) return;
-
-    async function load() {
+    if (!currentUser) return;
+    const loadBalance = async () => {
       try {
-        const ref = doc(db, "users", user.uid);
-        const snap = await getDoc(ref);
-
-        if (snap.exists()) setBalance(snap.data().wallet || 0);
+        const accRef = doc(db, "accounts", currentUser.uid);
+        const snap = await getDoc(accRef);
+        if (snap.exists()) setBalance(snap.data().balance || 0);
       } catch (err) {
         console.error(err);
       }
-    }
+    };
+    loadBalance();
+  }, [currentUser]);
 
-    load();
-  }, [user]);
-
-  async function submitWithdrawal(e) {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
     setLoading(true);
 
-    // Validate
     if (!amount || Number(amount) <= 0) {
-      setMessage("Enter a valid withdrawal amount.");
+      setMessage("Enter a valid amount.");
       setLoading(false);
       return;
     }
     if (Number(amount) > balance) {
-      setMessage("Insufficient wallet balance.");
+      setMessage("Insufficient balance.");
       setLoading(false);
       return;
     }
     if (!accountName || !accountNumber) {
-      setMessage("Account name and number are required.");
+      setMessage("Account/Wallet Name and Number are required.");
+      setLoading(false);
+      return;
+    }
+    if (method === "bank" && (!bankName || !swiftCode)) {
+      setMessage("Bank Name and SWIFT/Routing code are required.");
       setLoading(false);
       return;
     }
 
     try {
       await addDoc(collection(db, "withdrawals"), {
-        userId: user.uid,
-        amount: Number(amount),
+        userId: currentUser.uid,
         method,
         accountName,
         accountNumber,
-        bankName,
-        swiftCode,
+        bankName: method === "bank" ? bankName : "",
+        swiftCode: method === "bank" ? swiftCode : "",
         note,
+        amount: Number(amount),
         status: "pending",
         createdAt: serverTimestamp(),
       });
 
-      setMessage("Withdrawal request submitted. Awaiting admin approval.");
+      setMessage("Withdrawal request submitted successfully ✅");
       setAmount("");
       setAccountName("");
       setAccountNumber("");
       setBankName("");
       setSwiftCode("");
       setNote("");
+      setMethod("bank");
     } catch (err) {
       console.error(err);
-      setMessage("Failed to submit request.");
+      setMessage("Submission failed. Try again.");
     }
 
     setLoading(false);
-  }
+  };
 
   return (
-    <div className="withdraw-page">
-      <h2 className="withdraw-title">Withdraw Funds</h2>
-
+    <div className="withdraw-container">
+      <h2>Withdraw Funds</h2>
       <div className="balance-card">
-        <span>Available Balance:</span>
+        <span>Available Balance</span>
         <strong>${balance.toLocaleString()}</strong>
       </div>
 
-      <form className="withdraw-form" onSubmit={submitWithdrawal}>
+      <div className="method-selector">
+        {methods.map((m) => (
+          <div
+            key={m.id}
+            className={`method-card ${method === m.id ? "selected" : ""}`}
+            onClick={() => setMethod(m.id)}
+          >
+            <span className="method-icon">{m.icon}</span>
+            <span className="method-label">{m.label}</span>
+          </div>
+        ))}
+      </div>
 
-        <label>Withdrawal Method</label>
-        <select value={method} onChange={(e) => setMethod(e.target.value)}>
-          <option value="bank">Bank Transfer</option>
-          <option value="crypto">Cryptocurrency</option>
-          <option value="paypal">PayPal</option>
-          <option value="mobile">Mobile Money</option>
-        </select>
-
+      <form className="withdraw-form" onSubmit={handleSubmit}>
         <label>Account / Wallet Name</label>
         <input
           type="text"
@@ -125,7 +133,6 @@ export default function Withdraw() {
           placeholder="Enter account number or wallet address"
         />
 
-        {/* Bank fields only for bank transfer */}
         {method === "bank" && (
           <>
             <label>Bank Name</label>
@@ -135,7 +142,6 @@ export default function Withdraw() {
               onChange={(e) => setBankName(e.target.value)}
               placeholder="Enter bank name"
             />
-
             <label>SWIFT / Routing Code</label>
             <input
               type="text"
@@ -146,7 +152,7 @@ export default function Withdraw() {
           </>
         )}
 
-        <label>Amount</label>
+        <label>Amount ($)</label>
         <input
           type="number"
           value={amount}
@@ -167,7 +173,7 @@ export default function Withdraw() {
         </button>
       </form>
 
-      {message && <p className="withdraw-msg">{message}</p>}
+      {message && <p className={`withdraw-msg ${message.includes("success") ? "success" : "error"}`}>{message}</p>}
     </div>
   );
 }

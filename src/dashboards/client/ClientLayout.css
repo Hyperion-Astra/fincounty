@@ -1,0 +1,92 @@
+/* ================================
+   CLIENT LAYOUT MAIN STYLES
+================================ */
+.client-layout {
+  display: flex;
+  width: 100%;
+  min-height: 100vh;
+  background: #f4f6f9;
+  overflow: hidden;
+}
+
+/* Sidebar occupies fixed width */
+.client-sidebar {
+  width: 260px;
+  background: #ffffff;
+  border-right: 1px solid #e5e7eb;
+  transition: all 0.3s ease;
+}
+
+/* Main section */
+.client-main-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Top bar */
+.client-topbar {
+  width: 100%;
+  background: #ffffff;
+  padding: 16px 24px;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Content wrapper */
+.client-content-wrapper {
+  flex: 1;
+  padding: 20px 24px;
+  overflow-y: auto;
+}
+
+/* =========================================
+   MOBILE RESPONSIVENESS
+========================================= */
+@media (max-width: 900px) {
+  .client-sidebar {
+    position: fixed;
+    left: -260px;
+    top: 0;
+    height: 100vh;
+    z-index: 30;
+  }
+
+  .client-sidebar.active {
+    left: 0;
+  }
+
+  .client-main-area {
+    width: 100%;
+  }
+
+  .client-topbar {
+    padding: 14px 18px;
+  }
+
+  .client-content-wrapper {
+    padding: 16px 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .client-topbar {
+    padding: 12px 10px;
+    font-size: 14px;
+  }
+
+  .client-content-wrapper {
+    padding: 12px;
+  }
+}
+.balance-card.clickable {
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.balance-card.clickable:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}

@@ -1,25 +1,34 @@
-// src/dashboards/client/ClientLayout.jsx
-import React from "react";
-import { Outlet } from "react-router-dom";
+import React, { useState } from "react";
+import { Navigate, Outlet } from "react-router-dom";
 import ClientSidebar from "./components/ClientSidebar";
 import ClientTopbar from "./components/ClientTopbar";
-import "./client.css";
+import "./ClientLayout.css";
 import { useAuth } from "../../context/AuthContext";
 import Spinner from "../../components/Spinner.jsx";
 
 export default function ClientLayout() {
   const { currentUser, userProfile, loading } = useAuth();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
+
+  // Prevent flashing while loading
   if (loading) return <Spinner />;
-  if (!currentUser) return <div>Please log in</div>;
+
+  // Not logged in
+  if (!currentUser) return <Navigate to="/login" replace />;
 
   return (
     <div className="client-layout">
-      <ClientSidebar />
+      <ClientSidebar
+  isAdmin={userProfile?.role === "admin"}
+  isOpen={sidebarOpen}
+  toggleSidebar={() => setSidebarOpen(!sidebarOpen)}
+/>
 
-      <div className="client-main">
-        <ClientTopbar user={userProfile} />
-        <div className="client-content">
+
+      <div className="client-main-area">
+      <ClientTopbar user={userProfile} toggleSidebar={() => setSidebarOpen(!sidebarOpen)} />
+        <div className="client-content-wrapper">
           <Outlet />
         </div>
       </div>

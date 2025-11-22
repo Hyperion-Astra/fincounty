@@ -1,0 +1,276 @@
+.savings-dashboard {
+  max-width: 1000px;
+  margin: 2rem auto;
+  padding: 1rem 2rem;
+}
+
+h2 {
+  color: #004aad;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.savings-cards {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.savings-card {
+  background: linear-gradient(145deg, #ffffff, #f0f8ff);
+  border-radius: 15px;
+  padding: 1.5rem;
+  width: 250px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+  transition: transform 0.2s ease;
+}
+
+.savings-card:hover {
+  transform: translateY(-5px);
+}
+
+.card-header h3 {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  color: #004aad;
+}
+
+.balance {
+  font-size: 1.5rem;
+  font-weight: bold;
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.goal-bar {
+  height: 10px;
+  background: #e0e0e0;
+  border-radius: 5px;
+  margin: 0.5rem 0;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  background: #004aad;
+  border-radius: 5px;
+}
+
+.card-actions {
+  margin-top: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.btn {
+  flex: 1;
+  min-width: 70px;
+  padding: 0.5rem 0.8rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.deposit {
+  background: #004aad;
+  color: #fff;
+}
+
+.deposit:hover {
+  background: #00337f;
+}
+
+.withdraw {
+  background: #e5f1ff;
+  color: #004aad;
+}
+
+.withdraw:hover {
+  background: #cce0ff;
+}
+
+.transfer {
+  background: #fff3e0;
+  color: #ff8000;
+}
+
+.transfer:hover {
+  background: #ffd9b3;
+}
+
+.transactions-list {
+  margin-top: 2rem;
+  background: #fff;
+  border-radius: 12px;
+  padding: 1rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 0.8rem 0.5rem;
+  border-bottom: 1px solid #eee;
+  font-size: 0.95rem;
+  align-items: center;
+}
+
+.transaction-item:last-child {
+  border-bottom: none;
+}
+
+.tx-icon {
+  display: flex;
+  align-items: center;
+  margin-right: 0.5rem;
+}
+
+.tx-type {
+  font-weight: 500;
+  flex: 1;
+  color: #333;
+}
+
+.tx-date {
+  color: #777;
+  flex: 1;
+  text-align: center;
+}
+
+.tx-amount {
+  font-weight: 600;
+  flex: 1;
+  text-align: right;
+}
+
+.tx-amount.credit {
+  color: green;
+}
+
+.tx-amount.debit {
+  color: red;
+}
+
+.no-tx {
+  text-align: center;
+  color: #777;
+  padding: 1rem 0;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 768px) {
+  .savings-cards {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .transaction-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.3rem;
+  }
+
+  .card-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}
+.new-plan {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #004aad;
+  background: #e5f1ff;
+  cursor: pointer;
+  border: 2px dashed #004aad;
+  transition: background 0.2s ease;
+}
+
+.new-plan:hover {
+  background: #cce0ff;
+}
+
+.new-plan-form {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.new-plan-form input {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.new-plan-form button {
+  padding: 0.5rem;
+  border: none;
+  border-radius: 8px;
+  background: #004aad;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.new-plan-form button:hover {
+  background: #00337f;
+}
+.clickable {
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+.clickable:hover {
+  transform: translateY(-3px);
+}
+
+.plan-settings {
+  margin-top: 2rem;
+  padding: 1rem;
+  border-radius: 10px;
+  background: #f0f8ff;
+  max-width: 400px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.plan-settings input {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+}
+
+.plan-settings button {
+  padding: 0.5rem;
+  border-radius: 8px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.plan-settings button:first-of-type {
+  background: #004aad;
+  color: #fff;
+}
+
+.plan-settings .cancel-btn {
+  background: #ccc;
+  color: #333;
+}
+
+@media (max-width: 768px) {
+  .savings-cards {
+    flex-direction: column;
+  }
+  .plan-settings {
+    max-width: 100%;
+  }
+}

@@ -1,10 +1,88 @@
-.transfer-page { max-width:680px; margin:auto; padding:24px; }
-.transfer-form { display:flex; flex-direction:column; gap:10px; background:#fff; padding:18px; border-radius:12px; box-shadow:0 8px 30px rgba(2,6,23,0.06); }
-.transfer-form label { font-weight:600; font-size:0.95rem; }
-.transfer-form input, .transfer-form select { padding:10px; border-radius:8px; border:1px solid #e6e9ee; }
-.transfer-form button { margin-top:8px; padding:10px; border-radius:8px; background:#3b82f6; color:#fff; border:none; cursor:pointer; }
-.msg { margin-top:10px; padding:10px; border-radius:8px; }
-.msg.success { background:#ecfdf5; color:#065f46; }
-.msg.error { background:#fff1f2; color:#9f1239; }
-.msg.info { background:#eff6ff; color:#1e3a8a; }
-.muted { color:#6b7280; margin-top:8px; }
+.transfer-container {
+  max-width: 700px;
+  margin: 2rem auto;
+  padding: 1rem 2rem;
+  background: #f9faff;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+}
+
+h2 {
+  text-align: center;
+  color: #004aad;
+  margin-bottom: 1.5rem;
+}
+
+.transfer-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-weight: 500;
+  margin-bottom: 0.3rem;
+  color: #333;
+}
+
+input, select {
+  padding: 0.6rem 0.8rem;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+input:disabled, select:disabled {
+  background: #f1f1f1;
+}
+
+button {
+  padding: 0.75rem;
+  background: #004aad;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+button:hover {
+  background: #00337f;
+}
+
+.msg {
+  text-align: center;
+  font-weight: 500;
+  margin-top: 1rem;
+}
+
+.msg.success {
+  color: green;
+}
+
+.msg.error {
+  color: red;
+}
+
+.msg.info {
+  color: #004aad;
+}
+
+/* Responsive */
+@media screen and (max-width: 600px) {
+  .transfer-container {
+    padding: 1rem;
+  }
+  input, select {
+    font-size: 0.95rem;
+  }
+  button {
+    font-size: 1rem;
+  }
+}

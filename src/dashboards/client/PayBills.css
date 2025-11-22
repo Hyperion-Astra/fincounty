@@ -105,11 +105,19 @@
   color: green;
 }
 
-@media screen and (max-width: 500px) {
+/* Responsive */
+@media screen and (max-width: 600px) {
   .bill-cards {
     flex-direction: column;
+    gap: 0.8rem;
+    align-items: center;
   }
+
   .bill-card {
-    flex: 1 1 100%;
+    width: 90%;
+  }
+
+  .paybills-container {
+    padding: 1rem;
   }
 }

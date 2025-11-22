@@ -1,0 +1,131 @@
+.fund-container {
+  max-width: 800px;
+  margin: 2rem auto;
+  padding: 1rem 2rem;
+}
+
+.fund-container h2 {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 2rem;
+  color: #004aad;
+}
+
+.current-balance {
+  text-align: center;
+  font-size: 1.2rem;
+  margin-bottom: 2rem;
+  color: #333;
+}
+
+.fund-options {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
+.fund-card {
+  cursor: pointer;
+  flex: 1 1 150px;
+  min-width: 140px;
+  background: #f9f9f9;
+  border-radius: 12px;
+  text-align: center;
+  padding: 1rem;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.fund-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+}
+
+.fund-card.selected {
+  border: 2px solid #004aad;
+  background: #e5f1ff;
+}
+
+.fund-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.fund-name {
+  font-weight: bold;
+  color: #333;
+}
+
+.fund-form {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+  color: #333;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 0.65rem 0.8rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  border-color: #004aad;
+  outline: none;
+}
+
+.fund-message {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-weight: 500;
+}
+
+.fund-message.success {
+  color: green;
+}
+
+.fund-message.error {
+  color: red;
+}
+
+.fund-form button {
+  width: 100%;
+  padding: 0.75rem;
+  background: #004aad;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1rem;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.fund-form button:hover {
+  background: #00337f;
+}
+
+@media screen and (max-width: 600px) {
+  .fund-options {
+    flex-direction: column;
+  }
+  .fund-card {
+    width: 100%;
+  }
+}
