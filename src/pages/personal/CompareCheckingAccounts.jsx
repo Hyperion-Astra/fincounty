@@ -1,6 +1,7 @@
 /* CompareCheckingAccounts.jsx */
 import React from "react";
 import "./CompareCheckingAccounts.css";
+import { Link } from "react-router-dom";
 
 export default function CompareCheckingAccounts() {
   return (
@@ -52,7 +53,9 @@ export default function CompareCheckingAccounts() {
           </table>
 
           <div className="pc-compare-cta">
-            <a className="pc-btn pc-btn-primary" href="/apply">Open an Account</a>
+            <Link to="/register" className="pc-btn pc-btn-primary" data-aos="zoom-in" data-aos-delay="800">
+                      Open an Account
+                    </Link>
             <a className="pc-btn pc-btn-ghost" href="/contact">Contact Us</a>
           </div>
         </div>

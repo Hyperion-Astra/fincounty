@@ -1,9 +1,171 @@
-/* SwitchKit.css */
-.pc-switch { background:var(--page-bg,#f6f7fb); color:var(--text,#0b2545); font-family:var(--font-sans,Poppins, sans-serif); }
-.pc-switch-hero { padding:56px 5%; text-align:center; }
-.pc-switch-hero h1 { font-size:2.2rem; margin-bottom:6px; }
-.pc-section { padding:36px 5%; }
-.pc-steps { margin-top:18px; background:#fff; padding:20px; border-radius:10px; box-shadow:0 8px 24px rgba(8,26,46,0.06); }
-.pc-steps li { margin:12px 0; color:#344055; line-height:1.5; }
-.pc-switch-help { margin-top:18px; display:flex; gap:12px; align-items:center; }
-.pc-btn-primary { background:var(--primary,#0d6efd); color:#fff; padding:10px 16px; border-radius:8px; text-decoration:none; font-weight:600; }
+/* ---------- PAGE WRAPPER ---------- */
+.pc-switch {
+  font-family: var(--font-sans, Poppins, sans-serif);
+  color: var(--text, #0b2545);
+  background: var(--page-bg, #f6f7fb);
+}
+
+/* ---------- HERO ---------- */
+.pc-switch-hero {
+  padding: 60px 5%;
+  text-align: center;
+  background: #09387a;
+  color: white;
+}
+
+.pc-switch-hero h1 {
+  font-size: 2.4rem;
+  margin-bottom: 8px;
+}
+
+.pc-switch-hero p {
+  font-size: 1.1rem;
+  max-width: 650px;
+  margin: 0 auto;
+}
+
+/* ---------- INTRO ---------- */
+.pc-switch-intro {
+  padding: 40px 5%;
+  text-align: center;
+  font-size: 1rem;
+  color: #556777;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+/* ---------- STEPS ---------- */
+.pc-switch-steps {
+  padding: 50px 5%;
+}
+
+.pc-switch-steps h2 {
+  font-size: 2rem;
+  text-align: center;
+  margin-bottom: 32px;
+  font-weight: 700;
+  color: #0b2545;
+}
+
+.pc-steps-cards {
+  display: flex;
+  gap: 24px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.pc-step-card {
+  background: #fff;
+  border-radius: 10px;
+  padding: 24px;
+  flex: 1 1 250px;
+  max-width: 300px;
+  box-shadow: 0 8px 20px rgba(8, 26, 46, 0.08);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.pc-step-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 28px rgba(8, 26, 46, 0.12);
+}
+
+.pc-step-number {
+  width: 42px;
+  height: 42px;
+  background: #1a5ab3;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.2rem;
+  margin: 0 auto 16px;
+}
+
+.pc-step-card h3 {
+  font-size: 1.2rem;
+  margin-bottom: 8px;
+  color: #0b2545;
+}
+
+.pc-step-card p {
+  font-size: 0.95rem;
+  color: #556777;
+  line-height: 1.6;
+}
+
+/* ---------- HELP CTA ---------- */
+.pc-switch-help {
+  text-align: center;
+  margin-top: 36px;
+}
+
+.pc-switch-help p {
+  margin-bottom: 16px;
+  color: #556777;
+}
+
+.pc-btn-primary {
+  background: #1a5ab3;
+  color: white;
+  border: none;
+  padding: 14px 32px;
+  border-radius: 6px;
+  font-weight: 600;
+  text-decoration: none;
+  display: inline-block;
+  transition: 0.25s ease;
+}
+
+.pc-btn-primary:hover {
+  background: #003f89;
+}
+
+/* ---------- RESPONSIVE ---------- */
+@media (max-width: 900px) {
+  .pc-switch-hero h1 {
+    font-size: 2rem;
+  }
+
+  .pc-switch-hero p {
+    font-size: 1rem;
+  }
+
+  .pc-steps-cards {
+    gap: 16px;
+  }
+
+  .pc-step-card {
+    max-width: 100%;
+    padding: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .pc-switch-hero h1 {
+    font-size: 1.8rem;
+  }
+
+  .pc-switch-hero p {
+    font-size: 0.95rem;
+  }
+
+  .pc-step-card h3 {
+    font-size: 1.1rem;
+  }
+
+  .pc-step-card p {
+    font-size: 0.9rem;
+  }
+
+  .pc-switch-help {
+    margin-top: 28px;
+  }
+
+  .pc-btn-primary {
+    width: 100%;
+    max-width: 260px;
+  }
+}

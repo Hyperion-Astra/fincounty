@@ -1,7 +1,145 @@
-/* CreditCards.css */
-.pc-cards { background:var(--page-bg,#f6f7fb); color:var(--text,#0b2545); font-family:var(--font-sans); }
-.pc-hero { padding:64px 5%; background:linear-gradient(180deg, rgba(10,30,60,0.85), rgba(10,30,60,0.6)); color:#fff; }
-.pc-section { padding:40px 5%; }
-.pc-cards-grid { display:grid; gap:18px; grid-template-columns: repeat(auto-fit,minmax(240px,1fr)); margin-top:18px; }
-.card-item { background:#fff;padding:20px;border-radius:12px;box-shadow:0 8px 24px rgba(8,26,46,0.06); }
-.pc-link { color:var(--primary,#0d6efd); text-decoration:none; font-weight:600; }
+.pc-cards {
+   font-family: var(--font-sans, Poppins, sans-serif);
+  color: var(--text, #0b2545);
+  background: var(--page-bg, #f6f7fb);
+}
+
+/* HERO */
+.pc-hero {
+   padding: 80px 5%;
+  text-align: center;
+  background: linear-gradient(to right, #003893 0%, #1a5ab3 100%);
+  color: #fff;
+}
+
+.pc-hero h1 {
+  font-size: 2.8rem;
+  margin-bottom: 12px;
+}
+
+.pc-hero .pc-lead {
+  font-size: 1.2rem;
+  opacity: 0.95;
+}
+
+/* CARD LIST ALTERNATING STYLE */
+.pc-cards-list {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin-top: 40px;
+}
+
+.card-item {
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.card-item:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 25px rgba(0,0,0,0.12);
+}
+
+.card-left {
+  border-left: 4px solid #1a5ab3;
+}
+
+.card-right {
+  border-right: 4px solid #1a5ab3;
+}
+
+.card-content h3 {
+  font-size: 1.25rem;
+  color: #003893;
+  margin-bottom: 8px;
+}
+
+.card-content p {
+  font-size: 0.95rem;
+  color: #556777;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.pc-link {
+  background: none;
+  border: none;
+  color: #1a5ab3;
+  cursor: pointer;
+  font-weight: 500;
+  padding: 4px 0;
+}
+
+.pc-link:hover {
+  text-decoration: underline;
+}
+
+.card-details {
+  margin-top: 12px;
+  font-size: 0.9rem;
+  color: #465a6a;
+  line-height: 1.4;
+}
+
+/* CTA BUTTONS */
+.pc-card-cta {
+  margin-top: 36px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+}
+
+.pc-btn-primary {
+  background: #1a5ab3;
+  color: #fff;
+  padding: 14px 32px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: 0.25s ease;
+}
+
+.pc-btn-primary:hover {
+  background: #003f89;
+}
+
+.pc-btn-ghost {
+  background: #fff;
+  border: 1px solid #1a5ab3;
+  color: #1a5ab3;
+  padding: 14px 32px;
+  border-radius: 4px;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.pc-btn-ghost:hover {
+  background: #f3f6fc;
+}
+
+/* RESPONSIVE */
+@media (max-width: 900px) {
+  .pc-hero {
+    padding: 60px 5%;
+  }
+
+  .pc-hero h1 {
+    font-size: 2.2rem;
+  }
+
+  .pc-hero .pc-lead {
+    font-size: 1rem;
+  }
+
+  .card-item {
+    flex-direction: column;
+    border-left: none;
+    border-right: none;
+  }
+}
