@@ -92,7 +92,7 @@ export default function Loans() {
           </div>
 
           <div className="pc-loan-cta">
-            <a className="pc-btn pc-btn-primary" href="/apply">
+            <a className="pc-btn pc-btn-primary" href="/apploan">
               Apply for a Loan
             </a>
             <a className="pc-btn pc-btn-ghost" href="/contact">

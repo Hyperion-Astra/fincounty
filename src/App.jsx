@@ -16,6 +16,7 @@ import Foundation from "./pages/Foundation";
 import Contact from "./pages/Contact";
 import About from "./pages/About";
 import Login from "./pages/auth/Login";
+import GrantApplicationPage from "./pages/GrantApplicationPage"
 import Register from "./pages/auth/Register";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import KYCForm from "./pages/auth/KYCForm";
@@ -29,6 +30,7 @@ import CDRates from "./pages/personal/CDRates";
 import OnlineBanking from "./pages/personal/OnlineBanking";
 import Loans from "./pages/personal/Loans";
 import CreditCards from "./pages/personal/CreditCards";
+import AppLoan from "./pages/AppLoan";
 
 // Business
 import BusinessCashManagement from "./pages/business/BusinessCashManagement";
@@ -98,6 +100,8 @@ function AppContent() {
         <Route path="/foundation" element={<Foundation />} />
         <Route path="/contact" element={<Contact />} />
         <Route path="/about" element={<About />} />
+        <Route path="/apply" element={<GrantApplicationPage />} />
+        <Route path="/apploan" element={<AppLoan />} />
 
         {/* Auth */}
         <Route path="/login" element={<Login />} />

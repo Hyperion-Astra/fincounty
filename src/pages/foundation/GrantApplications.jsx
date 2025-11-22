@@ -20,9 +20,7 @@ export default function GrantApplications() {
         <div className="pc-container">
           <h2>Supporting Our Community</h2>
           <p>
-            Our foundation awards grants to nonprofit organizations that positively impact 
-            education, health services, community development, and local programs. 
-            We aim to uplift initiatives that improve residents' lives and foster long-term growth.
+           Our foundation awards grants to a wide range of applicants—including nonprofit organizations, private businesses, community groups, and individuals—whose work positively influences education, health services, economic development, and community well-being.
           </p>
         </div>
       </section>
@@ -32,10 +30,24 @@ export default function GrantApplications() {
         <div className="pc-container">
           <h2>Eligibility Requirements</h2>
           <ul className="pc-list">
-            <li>Must be a registered nonprofit (501(c)(3)) organization.</li>
-            <li>Programs must directly benefit local communities.</li>
-            <li>All applications must include a detailed project budget.</li>
-            <li>Organizations may submit one application per calendar year.</li>
+           <li>Applicants must provide valid identification (National ID, Driver’s License, or International Passport).</li>
+            <li>Nonprofits must provide official documentation confirming their organizational status.</li>
+            <li>Individuals must clearly describe their project, purpose, or financial need.</li>
+            <li>All applicants must submit a brief proposal outlining how the grant will be utilized.</li>
+            <li>Applicants must provide a valid phone number and email address for communication.</li>
+            <li>A simple budget estimate or cost breakdown must be included for review.</li>
+            <li>Healthcare professionals must present proof of practice or certification.</li>
+            <li>Farmers must show evidence of land ownership, lease, or active farming activity.</li>
+            <li>Entrepreneurs must outline their business idea, plan, or growth strategy.</li>
+            <li>Retirees applying for personal or community projects must describe intended community impact.</li>
+            <li>Engineering or technical applicants must briefly outline their project feasibility.</li>
+            <li>All applicants must agree to periodic follow-ups or updates after receiving the grant.</li>
+            <li>Only one active application is allowed per applicant at a time.</li>
+            <li>Grant funds must not be used for illegal or unethical activities.</li>
+            <li>Incomplete applications may be delayed or rejected.</li>
+            <li>Retirees applying for personal grants must clearly state the purpose, such as personal development, lifelong learning, health support, or pursuing a personal project.</li>
+
+            
           </ul>
         </div>
       </section>

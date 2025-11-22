@@ -22,7 +22,7 @@ export default function KYCForm() {
     idType: "driver_license",
     idNumber: "",
     accountType: "checking",
-    transactionPin: ""
+    transactionPin: "",
   });
 
   useEffect(() => {
@@ -60,6 +60,7 @@ export default function KYCForm() {
         fullName: form.fullName,
         dob: form.dob,
         ssn: form.ssn,
+        tim: form.tim,
         phone: form.phone,
         address: { line1: form.addressLine1, city: form.city, state: form.state, zip: form.zip },
         employment: form.employment,
@@ -110,7 +111,11 @@ export default function KYCForm() {
           </div>
           <div>
             <label>SSN (full)</label>
-            <input value={form.ssn} onChange={e => update('ssn', e.target.value)} required />
+            <input value={form.ssn} onChange={e => update('ssn', e.target.value)} />
+          </div>
+          <div>
+            <label>TIM (full)</label>
+            <input value={form.tim} onChange={e => update('tim', e.target.value)} required />
           </div>
           <div>
             <label>Phone</label>
@@ -138,10 +143,11 @@ export default function KYCForm() {
         {/* ID info */}
         <div className="kyc-grid kyc-grid-2">
           <div>
-            <label>ID type</label>
+            <label>ID type: Government Issued ID</label>
             <select value={form.idType} onChange={e => update('idType', e.target.value)}>
               <option value="driver_license">Driver's License</option>
-              <option value="state_id">Government Issued ID</option>
+              <option value="state_id">National ID Card</option>
+              <option value="passport">Passport</option>
             </select>
           </div>
           <div>
@@ -149,6 +155,8 @@ export default function KYCForm() {
             <input value={form.idNumber} onChange={e => update('idNumber', e.target.value)} />
           </div>
         </div>
+
+
 
         {/* Account type & PIN */}
         <div className="kyc-grid kyc-grid-2">

@@ -4,8 +4,8 @@ import { db } from "../../firebase";
 import { doc, getDoc, addDoc, collection, serverTimestamp } from "firebase/firestore";
 import "./Withdraw.css";
 
+// Only crypto works — others show "Coming soon"
 const methods = [
-  { id: "bank", label: "Bank Transfer", icon: "🏦" },
   { id: "crypto", label: "Cryptocurrency", icon: "🪙" },
   { id: "paypal", label: "PayPal", icon: "🅿️" },
   { id: "mobile", label: "Mobile Money", icon: "📱" },
@@ -17,16 +17,17 @@ export default function Withdraw() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState("");
 
-  const [method, setMethod] = useState("bank");
-  const [accountName, setAccountName] = useState("");
-  const [accountNumber, setAccountNumber] = useState("");
-  const [bankName, setBankName] = useState("");
-  const [swiftCode, setSwiftCode] = useState("");
-  const [note, setNote] = useState("");
+  // Form states
+  const [method, setMethod] = useState("crypto");
   const [amount, setAmount] = useState("");
+  const [walletAddress, setWalletAddress] = useState("");
+  const [network, setNetwork] = useState("BTC");
+  const [memo, setMemo] = useState("");
+  const [disabledMsg, setDisabledMsg] = useState("");
 
   useEffect(() => {
     if (!currentUser) return;
+
     const loadBalance = async () => {
       try {
         const accRef = doc(db, "accounts", currentUser.uid);
@@ -36,12 +37,28 @@ export default function Withdraw() {
         console.error(err);
       }
     };
+
     loadBalance();
   }, [currentUser]);
+
+  // Handle unavailable withdrawal options
+  useEffect(() => {
+    if (method !== "crypto") {
+      setDisabledMsg("This withdrawal method is not yet available. Please try again later.");
+    } else {
+      setDisabledMsg("");
+    }
+  }, [method]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage("");
+
+    if (method !== "crypto") {
+      setMessage("This method is not yet available.");
+      return;
+    }
+
     setLoading(true);
 
     if (!amount || Number(amount) <= 0) {
@@ -49,18 +66,15 @@ export default function Withdraw() {
       setLoading(false);
       return;
     }
+
     if (Number(amount) > balance) {
       setMessage("Insufficient balance.");
       setLoading(false);
       return;
     }
-    if (!accountName || !accountNumber) {
-      setMessage("Account/Wallet Name and Number are required.");
-      setLoading(false);
-      return;
-    }
-    if (method === "bank" && (!bankName || !swiftCode)) {
-      setMessage("Bank Name and SWIFT/Routing code are required.");
+
+    if (!walletAddress) {
+      setMessage("Wallet address is required.");
       setLoading(false);
       return;
     }
@@ -68,25 +82,22 @@ export default function Withdraw() {
     try {
       await addDoc(collection(db, "withdrawals"), {
         userId: currentUser.uid,
-        method,
-        accountName,
-        accountNumber,
-        bankName: method === "bank" ? bankName : "",
-        swiftCode: method === "bank" ? swiftCode : "",
-        note,
+        method: "crypto",
+        network,
+        walletAddress,
+        memo,
         amount: Number(amount),
         status: "pending",
         createdAt: serverTimestamp(),
       });
 
-      setMessage("Withdrawal request submitted successfully ✅");
+      setMessage("Crypto withdrawal request submitted successfully ✅");
+
       setAmount("");
-      setAccountName("");
-      setAccountNumber("");
-      setBankName("");
-      setSwiftCode("");
-      setNote("");
-      setMethod("bank");
+      setWalletAddress("");
+      setMemo("");
+      setNetwork("BTC");
+      setMethod("crypto");
     } catch (err) {
       console.error(err);
       setMessage("Submission failed. Try again.");
@@ -98,11 +109,13 @@ export default function Withdraw() {
   return (
     <div className="withdraw-container">
       <h2>Withdraw Funds</h2>
+
       <div className="balance-card">
         <span>Available Balance</span>
         <strong>${balance.toLocaleString()}</strong>
       </div>
 
+      {/* Withdrawal method selector */}
       <div className="method-selector">
         {methods.map((m) => (
           <div
@@ -116,38 +129,37 @@ export default function Withdraw() {
         ))}
       </div>
 
+      {/* Disabled messages for non-crypto */}
+      {disabledMsg && method !== "crypto" && (
+        <p className="disabled-msg">{disabledMsg}</p>
+      )}
+
       <form className="withdraw-form" onSubmit={handleSubmit}>
-        <label>Account / Wallet Name</label>
-        <input
-          type="text"
-          value={accountName}
-          onChange={(e) => setAccountName(e.target.value)}
-          placeholder="Enter account name"
-        />
-
-        <label>Account Number / Wallet Address</label>
-        <input
-          type="text"
-          value={accountNumber}
-          onChange={(e) => setAccountNumber(e.target.value)}
-          placeholder="Enter account number or wallet address"
-        />
-
-        {method === "bank" && (
+        {/* CRYPTO FIELDS */}
+        {method === "crypto" && (
           <>
-            <label>Bank Name</label>
+            <label>Select Network</label>
+            <select value={network} onChange={(e) => setNetwork(e.target.value)}>
+              <option value="BTC">Bitcoin (BTC)</option>
+              <option value="ETH">Ethereum (ETH)</option>
+              <option value="USDT-TRC20">USDT (TRC20)</option>
+              <option value="USDT-ERC20">USDT (ERC20)</option>
+            </select>
+
+            <label>Wallet Address</label>
             <input
               type="text"
-              value={bankName}
-              onChange={(e) => setBankName(e.target.value)}
-              placeholder="Enter bank name"
+              value={walletAddress}
+              onChange={(e) => setWalletAddress(e.target.value)}
+              placeholder="Enter your crypto wallet address"
             />
-            <label>SWIFT / Routing Code</label>
+
+            <label>Memo / Tag (Optional)</label>
             <input
               type="text"
-              value={swiftCode}
-              onChange={(e) => setSwiftCode(e.target.value)}
-              placeholder="SWIFT / Routing Code"
+              value={memo}
+              onChange={(e) => setMemo(e.target.value)}
+              placeholder="Memo / Tag if required"
             />
           </>
         )}
@@ -161,19 +173,16 @@ export default function Withdraw() {
           max={balance}
         />
 
-        <label>Note (Optional)</label>
-        <textarea
-          value={note}
-          onChange={(e) => setNote(e.target.value)}
-          placeholder="Describe purpose of withdrawal..."
-        />
-
-        <button type="submit" disabled={loading}>
+        <button type="submit" disabled={loading || method !== "crypto"}>
           {loading ? "Submitting..." : "Submit Withdrawal Request"}
         </button>
       </form>
 
-      {message && <p className={`withdraw-msg ${message.includes("success") ? "success" : "error"}`}>{message}</p>}
+      {message && (
+        <p className={`withdraw-msg ${message.includes("success") ? "success" : "error"}`}>
+          {message}
+        </p>
+      )}
     </div>
   );
 }

@@ -52,11 +52,6 @@ export default function ClientSidebar({ isOpen, toggleSidebar }) {
             <span>Dashboard</span>
           </NavLink>
 
-          <NavLink to="/dashboard/fund" className="sidebar-link">
-            <ArrowDownCircle size={18} />
-            <span>Fund Account</span>
-          </NavLink>
-
           <NavLink to="/dashboard/withdraw" className="sidebar-link">
             <ArrowUpCircle size={18} />
             <span>Withdraw</span>

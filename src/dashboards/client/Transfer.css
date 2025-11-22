@@ -1,88 +1,223 @@
+/* -------------------------
+   TRANSFER PAGE LAYOUT
+-------------------------- */
+
 .transfer-container {
-  max-width: 700px;
-  margin: 2rem auto;
-  padding: 1rem 2rem;
-  background: #f9faff;
-  border-radius: 12px;
-  box-shadow: 0 3px 10px rgba(0,0,0,0.08);
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 30px 20px;
+  font-family: "Inter", sans-serif;
 }
 
-h2 {
-  text-align: center;
-  color: #004aad;
-  margin-bottom: 1.5rem;
+.transfer-container h2 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #1f1f1f;
+  margin-bottom: 25px;
 }
+
+
+/* -------------------------
+   TRANSFER TYPE CARDS
+-------------------------- */
+
+.transfer-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 15px;
+  margin-bottom: 30px;
+}
+
+.transfer-card {
+  background: #ffffff;
+  border: 2px solid #e6e6e6;
+  border-radius: 12px;
+  padding: 18px 15px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  cursor: pointer;
+  transition: 0.25s ease;
+}
+
+.transfer-card:hover {
+  border-color: #2463eb;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.05);
+}
+
+.transfer-card.selected {
+  border-color: #2463eb;
+  background: #f5f8ff;
+  box-shadow: 0 4px 18px rgba(50, 90, 200, 0.15);
+}
+
+.card-icon {
+  font-size: 28px;
+}
+
+.card-body .card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1c1c1c;
+}
+
+.card-body .card-hint {
+  font-size: 13px;
+  color: #777;
+  margin-top: 2px;
+}
+
+
+/* -------------------------
+   INPUT FORM
+-------------------------- */
 
 .transfer-form {
+  background: #ffffff;
+  padding: 20px 20px 30px;
+  border-radius: 14px;
+  border: 1px solid #e8e8e8;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.05);
+}
+
+.transfer-form .row {
+  margin-bottom: 18px;
   display: flex;
   flex-direction: column;
-  gap: 1rem;
 }
 
-.form-group {
+.transfer-form label {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #2c2c2c;
+}
+
+.transfer-form input,
+.transfer-form select {
+  padding: 12px 13px;
+  border-radius: 10px;
+  border: 1.5px solid #dcdcdc;
+  background: #fafafa;
+  font-size: 15px;
+  transition: 0.25s ease;
+}
+
+.transfer-form input:focus,
+.transfer-form select:focus {
+  outline: none;
+  border-color: #2463eb;
+  background: #fff;
+  box-shadow: 0 0 0 4px rgba(36, 99, 235, 0.15);
+}
+
+.hint {
+  font-size: 13px;
+  color: #555;
+  margin-top: -10px;
+  margin-bottom: 15px;
+}
+
+
+/* -------------------------
+   TWO COLUMN LAYOUT
+-------------------------- */
+
+.two-cols {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+
+.two-cols div {
   display: flex;
   flex-direction: column;
 }
 
-label {
-  font-weight: 500;
-  margin-bottom: 0.3rem;
-  color: #333;
+
+/* -------------------------
+   BUTTON
+-------------------------- */
+
+.actions {
+  margin-top: 12px;
+  display: flex;
+  justify-content: flex-end;
 }
 
-input, select {
-  padding: 0.6rem 0.8rem;
-  border-radius: 8px;
-  border: 1px solid #ccc;
-  font-size: 1rem;
-}
-
-input:disabled, select:disabled {
-  background: #f1f1f1;
-}
-
-button {
-  padding: 0.75rem;
-  background: #004aad;
+.actions button {
+  padding: 13px 24px;
+  font-size: 15px;
+  font-weight: 600;
+  background: #2463eb;
   color: #fff;
   border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
+  border-radius: 10px;
   cursor: pointer;
-  transition: background 0.2s;
+  transition: 0.25s ease;
 }
 
-button:hover {
-  background: #00337f;
+.actions button:hover {
+  background: #1c4fc4;
 }
+
+.actions button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+
+/* -------------------------
+   FEEDBACK MESSAGES
+-------------------------- */
 
 .msg {
-  text-align: center;
-  font-weight: 500;
-  margin-top: 1rem;
+  margin-top: 18px;
+  padding: 12px 15px;
+  border-radius: 10px;
+  font-size: 14px;
+  line-height: 1.45;
 }
 
 .msg.success {
-  color: green;
+  background: #e8ffef;
+  color: #0c7a32;
+  border: 1px solid #9be5a4;
 }
 
 .msg.error {
-  color: red;
+  background: #ffeaea;
+  color: #b21010;
+  border: 1px solid #ffb3b3;
 }
 
 .msg.info {
-  color: #004aad;
+  background: #eaf1ff;
+  color: #1d4ed8;
+  border: 1px solid #b3ccff;
 }
 
-/* Responsive */
-@media screen and (max-width: 600px) {
-  .transfer-container {
-    padding: 1rem;
+
+/* -------------------------
+   RESPONSIVE ADJUSTMENTS
+-------------------------- */
+
+@media (max-width: 600px) {
+  .transfer-container h2 {
+    font-size: 24px;
   }
-  input, select {
-    font-size: 0.95rem;
+
+  .two-cols {
+    grid-template-columns: 1fr;
   }
-  button {
-    font-size: 1rem;
+
+  .transfer-card {
+    padding: 16px;
+  }
+
+  .card-icon {
+    font-size: 24px;
   }
 }
