@@ -66,7 +66,7 @@ export default function TaborAward() {
             </div>
           </div>
 
-          <Link className="pc-btn pc-btn-primary" to="/apply">
+          <Link className="pc-btn pc-btn-primary" to="/contact">
             Submit a Nomination
           </Link>
         </div>

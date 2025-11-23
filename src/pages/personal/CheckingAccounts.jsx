@@ -81,7 +81,7 @@ export default function CheckingAccounts() {
             <h2>Ready to open an account?</h2>
             <p>Start your application online — it only takes a few minutes.</p>
             <div className="pc-cta-actions">
-              <a className="pc-btn pc-btn-primary" href="/apply">Open an Account</a>
+              <a className="pc-btn pc-btn-primary" href="/register">Open an Account</a>
               <a className="pc-btn pc-btn-ghost" href="/personal/checking-accounts/switch-kit">Switch Kit</a>
             </div>
           </div>

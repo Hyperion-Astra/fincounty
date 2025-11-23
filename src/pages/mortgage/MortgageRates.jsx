@@ -53,7 +53,7 @@ export default function MortgageRates() {
         <p>
           Request a custom mortgage quote and see what rates you qualify for.
         </p>
-        <Link className="primary-btn" to="/apply">Request a Quote</Link>
+        <Link className="primary-btn" to="/contact">Request a Quote</Link>
       </section>
     </div>
   );

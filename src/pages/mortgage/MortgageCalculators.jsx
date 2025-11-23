@@ -86,7 +86,7 @@ export default function MortgageCalculators() {
       <section className="section" data-aos="fade-up">
         <h2>Apply for a Mortgage</h2>
         <p>Ready to move forward? Start your mortgage application with us today.</p>
-        <Link to="/apply" className="primary-btn">Start Application</Link>
+        <Link to="/contact" className="primary-btn">Contact Support</Link>
       </section>
     </div>
   );

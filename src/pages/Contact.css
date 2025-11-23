@@ -1,0 +1,156 @@
+/* ----------------------------- */
+/* Contact Page Styles */
+/* ----------------------------- */
+
+.contact-container {
+  padding: 40px 5%;
+  background: #f8fafc;
+}
+
+.contact-header {
+  text-align: center;
+  max-width: 700px;
+  margin: 0 auto 40px;
+}
+
+.contact-header h1 {
+  font-size: 2.4rem;
+  color: #0f172a;
+  margin-bottom: 10px;
+}
+
+.contact-header p {
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 1.1rem;
+}
+
+/* Wrapper for form + info card */
+.contact-wrapper {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+/* FORM BOX */
+.contact-form-box {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 16px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+  width: 100%;
+  max-width: 680px;
+}
+
+.contact-form-box h3 {
+  margin-bottom: 15px;
+  color: #0f172a;
+}
+
+/* FORM */
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 15px;
+}
+
+.form-row input {
+  flex: 1;
+}
+
+/* Inputs */
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: 1px solid #cbd5e1;
+  font-size: 1rem;
+  transition: 0.2s ease;
+  background: #fdfdfd;
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.15);
+  outline: none;
+}
+
+/* Submit Button */
+.contact-submit {
+  background: #2563eb;
+  color: white;
+  border: none;
+  padding: 14px;
+  font-size: 1rem;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.contact-submit:hover {
+  background: #1e4dc4;
+}
+
+/* INFO BOX */
+.contact-info-box {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 16px;
+  width: 100%;
+  max-width: 350px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+}
+
+.contact-info-box h3 {
+  margin-bottom: 15px;
+}
+
+/* Contact Info Items */
+.info-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.info-item h4 {
+  margin: 0;
+  color: #1e293b;
+}
+
+.info-item p {
+  margin: 2px 0 0;
+  color: #64748b;
+}
+
+/* ----------------------------- */
+/* RESPONSIVE */
+/* ----------------------------- */
+
+@media (max-width: 768px) {
+  .form-row {
+    flex-direction: column;
+  }
+
+  .contact-wrapper {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .contact-info-box {
+    max-width: 100%;
+  }
+}

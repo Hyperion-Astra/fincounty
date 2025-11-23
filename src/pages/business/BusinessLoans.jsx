@@ -98,7 +98,7 @@ export default function BusinessLoans() {
               </tr>
               <tr>
                 <td>Credit Score</td>
-                <td>600+ recommended</td>
+                <td>Recommended</td>
               </tr>
               <tr>
                 <td>Collateral</td>
@@ -115,7 +115,7 @@ export default function BusinessLoans() {
         <p>
           Whether you’re expanding, upgrading, or starting fresh, our team is here to help you find the right loan.
         </p>
-<Link to="/register" className="primary-btn" data-aos="zoom-in" data-aos-delay="800">
+<Link to="/apploan" className="primary-btn" data-aos="zoom-in" data-aos-delay="800">
           Apply Now
         </Link>      
         </section>

@@ -88,9 +88,6 @@ export default function CreditCards() {
           </div>
 
           <div className="pc-card-cta">
-            <a className="pc-btn pc-btn-primary" href="/apply">
-              Apply Now
-            </a>
             <a className="pc-btn pc-btn-ghost" href="/contact">
               Contact Us
             </a>

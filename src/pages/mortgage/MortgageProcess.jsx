@@ -61,8 +61,8 @@ export default function MortgageProcess() {
       <section className="section" data-aos="fade-up">
         <h2>Get Started Today</h2>
         <p>Take the first step towards your new home — our team will guide you through every stage.</p>
-<Link to="/apply" className="primary-btn" data-aos="zoom-in" data-aos-delay="800">
-          Get Started
+<Link to="/contact" className="primary-btn" data-aos="zoom-in" data-aos-delay="800">
+          Contact Support
         </Link>      
         </section>
     </div>

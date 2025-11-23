@@ -129,6 +129,11 @@ export default function GrantApplicationPage() {
           </div>
         ))}
       </section>
+{/* 
+      <Section>
+        <h3>Select your Grant Category</h3>
+        <h4>Fill in your details then submit</h4>
+      </Section> */}
 
       {/* Grant Modal */}
       {showGrantModal && (
