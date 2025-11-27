@@ -1,22 +1,54 @@
+/* TOPBAR WRAPPER */
 .admin-topbar {
   width: 100%;
   height: 60px;
   background: #ffffff;
-  border-bottom: 1px solid #e5e5e5;
-  padding: 0 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.08);
   display: flex;
   align-items: center;
   justify-content: space-between;
+  padding: 0 20px;
   position: sticky;
   top: 0;
-  z-index: 50;
+  z-index: 3000; /* above everything */
 }
 
-.admin-topbar-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #444;
+
+/* ------------------------------------------------------
+   SIDEBAR TOGGLE BUTTON (HAMBURGER)
+------------------------------------------------------ */
+
+.admin-topbar-menu-btn {
+  font-size: 28px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #111;
+  padding: 5px;
+  z-index: 4000; /* highest */
+  display: block; /* ALWAYS visible now */
 }
+
+.admin-topbar-menu-btn:hover {
+  opacity: 0.7;
+}
+
+
+/* ------------------------------------------------------
+   TITLE
+------------------------------------------------------ */
+
+.admin-topbar-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #3b1e76;
+  margin-left: 10px;
+}
+
+
+/* ------------------------------------------------------
+   RIGHT SIDE (AVATAR + LOGOUT)
+------------------------------------------------------ */
 
 .admin-topbar-right {
   display: flex;
@@ -24,44 +56,40 @@
   gap: 15px;
 }
 
-/* Avatar */
 .admin-topbar-avatar {
-  width: 36px;
-  height: 36px;
-  background: #6c63ff;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
+  background: #6a3cbc;
+  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
   font-weight: 600;
-  font-size: 16px;
+  font-size: 18px;
 }
 
-/* Logout button */
 .admin-topbar-logout-btn {
-  padding: 6px 14px;
-  background: #ff4b4b;
-  border: none;
+  padding: 6px 15px;
+  background: #ef4444;
   color: white;
+  border: none;
   border-radius: 6px;
   cursor: pointer;
   font-size: 14px;
 }
 
-/* Hamburger button (hidden on desktop) */
-.admin-topbar-menu-btn {
-  font-size: 24px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  display: none;
-  padding: 4px;
+.admin-topbar-logout-btn:hover {
+  opacity: 0.9;
 }
 
-/* Show burger on mobile only */
+
+/* ------------------------------------------------------
+   MOBILE RESPONSIVE
+------------------------------------------------------ */
+
 @media (max-width: 768px) {
-  .admin-topbar-menu-btn {
-    display: block;
+  .admin-topbar-title {
+    font-size: 18px;
   }
 }

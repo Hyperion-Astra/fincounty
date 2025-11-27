@@ -1,4 +1,6 @@
-/* src/dashboards/admin/admin.css */
+/* ------------------------------------------------------
+   GENERAL ADMIN DASHBOARD STYLES
+------------------------------------------------------ */
 
 .admin-container {
   padding: 40px;
@@ -47,7 +49,11 @@
   border-left-color: #e67e22;
 }
 
-/* USERS TABLE */
+
+/* ------------------------------------------------------
+   TABLE STYLES
+------------------------------------------------------ */
+
 .admin-table {
   margin-top: 40px;
   width: 100%;
@@ -93,6 +99,12 @@
 .admin-btn.save {
   background: #27ae60;
 }
+
+
+/* ------------------------------------------------------
+   MODAL
+------------------------------------------------------ */
+
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -127,16 +139,32 @@
   border-radius: 6px;
   cursor: pointer;
 }
-/* Admin Sidebar */
+
+
+/* ------------------------------------------------------
+   SIDEBAR (FINAL CLEAN VERSION)
+------------------------------------------------------ */
+
+/* Base sidebar */
 .admin-sidebar {
-  width: 220px;
-  background-color: #1f2937; /* dark gray/blue */
+  width: 260px;
+  background: #1f2937;
   color: #fff;
   height: 100vh;
-  padding: 1.5rem 1rem;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  position: fixed;
+  transition: transform 0.3s ease;
+  z-index: 2000;
+  transform: translateX(-100%); /* hidden by default */
+}
+
+/* Sidebar open */
+.admin-sidebar.open {
+  transform: translateX(0);
 }
 
 .admin-sidebar h3 {
@@ -154,7 +182,7 @@
 }
 
 .admin-sidebar nav a {
-  color: #d1d5db; /* light gray */
+  color: #d1d5db;
   text-decoration: none;
   padding: 0.5rem 0.75rem;
   border-radius: 6px;
@@ -162,39 +190,40 @@
 }
 
 .admin-sidebar nav a:hover {
-  background-color: #374151; /* slightly lighter dark */
+  background-color: #374151;
   color: #fff;
 }
 
 .admin-sidebar nav a.active {
-  background-color: #4f46e5; /* indigo */
+  background-color: #4f46e5;
   color: #fff;
   font-weight: 500;
 }
-/* SIDEBAR BASE */
-.admin-sidebar {
-  width: 260px;
-  background: #fff;
-  height: 100vh;
-  position: fixed;
-  top: 0;
-  left: 0;
-  padding: 20px;
-  transition: transform 0.3s ease;
-  z-index: 2000;
-}
 
-/* MOBILE: sidebar should be hidden by default */
-@media (max-width: 768px) {
+
+/* ------------------------------------------------------
+   RESPONSIVE SIDEBAR BEHAVIOR
+------------------------------------------------------ */
+
+@media (min-width: 769px) {
+  /* On laptop/desktop, sidebar starts CLOSED but can be toggled */
   .admin-sidebar {
     transform: translateX(-100%);
   }
-  .admin-sidebar.open {
-    transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+  /* On mobile, same behavior, but width is reduced */
+  .admin-sidebar {
+    width: 70%;
   }
 }
 
-/* BACKDROP */
+
+/* ------------------------------------------------------
+   BACKDROP (USED WHEN SIDEBAR IS OPEN)
+------------------------------------------------------ */
+
 .admin-backdrop {
   position: fixed;
   inset: 0;
@@ -203,17 +232,20 @@
   z-index: 1500;
 }
 
-/* HAMBURGER ICON */
+
+/* ------------------------------------------------------
+   HAMBURGER (VISIBLE ON ALL DEVICES)
+------------------------------------------------------ */
+
 .admin-hamburger-btn {
-  display: none;
+  display: block;
+  position: fixed;
+  top: 15px;
+  left: 15px;
   background: none;
   border: none;
-  font-size: 28px;
-  padding: 8px;
-}
-
-@media (max-width: 768px) {
-  .admin-hamburger-btn {
-    display: block;
-  }
+  font-size: 30px;
+  z-index: 3000; /* highest */
+  cursor: pointer;
+  color: #111;
 }
