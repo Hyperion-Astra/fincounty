@@ -77,6 +77,7 @@ import LoansAdmin from "./dashboards/admin/pages/LoansAdmin";
 import WithdrawalsAdmin from "./dashboards/admin/pages/WithdrawalsAdmin";
 import PendingTransactions from "./dashboards/admin/pages/PendingTransactions";
 import AdjustBalance from "./dashboards/admin/pages/AdjustBalance"
+import KYCApprovals from "./dashboards/admin/pages/KYCApprovals";
 
 // 🔥 Wrapper so we can use useLocation outside Router
 function AppContent() {
@@ -177,6 +178,7 @@ function AppContent() {
           <Route path="withdrawals" element={<WithdrawalsAdmin />} />
           <Route path="pending-transactions" element={<PendingTransactions />} />
           <Route path="adjust-balance" element={<AdjustBalance />} /> 
+          <Route path="kyc-approval" element={<KYCApprovals />} />
         </Route>
 
         {/* Catch-all */}

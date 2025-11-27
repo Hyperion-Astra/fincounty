@@ -31,3 +31,70 @@
 .dropdown-item:hover {
   background: #f2f2f2;
 }
+/* === Balance Display Wrapper === */
+.balance-display {
+  margin: 15px 0;
+  padding: 12px 14px;
+  background: #f8f8f8;
+  border: 1px solid #e2e2e2;
+  border-radius: 8px;
+}
+
+/* Placeholder when no user selected */
+.balances-placeholder {
+  color: #666;
+  font-size: 0.9rem;
+  padding-top: 4px;
+}
+
+/* Loading text */
+.balances-loading {
+  color: #888;
+  font-size: 0.9rem;
+  padding-top: 4px;
+}
+
+/* Balance numbers */
+.balances-values {
+  margin-top: 5px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 0.95rem;
+}
+
+.balances-values div strong {
+  color: #333;
+  font-weight: 600;
+}
+
+/* Dropdown styling (in case not already styled) */
+.user-search-wrapper {
+  position: relative;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  z-index: 10;
+  background: #fff;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  max-height: 180px;
+  overflow-y: auto;
+  margin-top: 4px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.dropdown-item {
+  padding: 10px 12px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: background 0.1s ease;
+}
+
+.dropdown-item:hover {
+  background: #f1f1f1;
+}

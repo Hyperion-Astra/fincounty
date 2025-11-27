@@ -1,0 +1,89 @@
+.admin-sidebar-title{
+  color: rgba(29, 33, 29, 0.133);
+}
+/* AdminSidebar.css */
+
+/* Sidebar container */
+.admin-sidebar {
+  position: fixed;
+  top: 0;
+  left: -250px; /* hidden by default */
+  width: 250px;
+  height: 100vh;
+  background-color: #1e1e2f;
+  color: #fff;
+  padding: 1rem;
+  box-shadow: 2px 0 8px rgba(0,0,0,0.2);
+  transition: left 0.3s ease; /* smooth slide */
+  z-index: 1000;
+  overflow-y: auto;
+}
+
+/* Sidebar open */
+.admin-sidebar.open {
+  left: 0;
+}
+
+/* Sidebar title */
+.admin-sidebar-title {
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+/* Sidebar navigation */
+.admin-sidebar-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-sidebar-nav a {
+  display: flex;
+  align-items: center;
+  padding: 0.6rem 0.5rem;
+  color: #fff;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-bottom: 0.2rem;
+  transition: background 0.2s;
+}
+
+.admin-sidebar-nav a:hover {
+  background-color: #33334d;
+}
+
+.admin-sidebar-nav a span {
+  margin-left: 0.5rem;
+}
+
+/* Backdrop */
+.admin-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 900; /* under sidebar */
+  background-color: rgba(0,0,0,0.4); /* semi-transparent on mobile */
+  transition: opacity 0.3s;
+}
+
+/* Hide scrollbar */
+.admin-sidebar::-webkit-scrollbar {
+  width: 5px;
+}
+
+.admin-sidebar::-webkit-scrollbar-thumb {
+  background-color: rgba(255,255,255,0.2);
+  border-radius: 2px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .admin-sidebar {
+    width: 70%;
+  }
+  .admin-backdrop {
+    background-color: rgba(0,0,0,0.4);
+  }
+}

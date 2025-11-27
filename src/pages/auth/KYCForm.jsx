@@ -60,7 +60,7 @@ export default function KYCForm() {
         fullName: form.fullName,
         dob: form.dob,
         ssn: form.ssn,
-        tim: form.tim,
+        tin: form.tin,
         phone: form.phone,
         address: { line1: form.addressLine1, city: form.city, state: form.state, zip: form.zip },
         employment: form.employment,
@@ -114,8 +114,8 @@ export default function KYCForm() {
             <input value={form.ssn} onChange={e => update('ssn', e.target.value)} />
           </div>
           <div>
-            <label>TIM (full)</label>
-            <input value={form.tim} onChange={e => update('tim', e.target.value)} required />
+            <label>TIN (full)</label>
+            <input value={form.tin} onChange={e => update('tin', e.target.value)} required />
           </div>
           <div>
             <label>Phone</label>
