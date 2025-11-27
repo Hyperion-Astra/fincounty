@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth, db } from "../../firebase";
@@ -9,11 +9,18 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const emailRef = useRef(null);
 
-  const handleLogin = async (e) => {
-    e.preventDefault();
+  // Auto-focus email input
+  useEffect(() => {
+    if (emailRef.current) emailRef.current.focus();
+  }, []);
+
+  const handleLogin = async () => {
     setError("");
+    setLoading(true);
     try {
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
@@ -21,13 +28,14 @@ const Login = () => {
       const userDoc = await getDoc(doc(db, "users", user.uid));
       if (!userDoc.exists()) {
         setError("User record not found. Contact support.");
+        setLoading(false);
         return;
       }
 
       const userData = userDoc.data();
 
       // Admin → admin dashboard
-      if (userData.role === "admin") {
+    if (userData.role?.toLowerCase() === "admin") {
         navigate("/admin");
         return;
       }
@@ -44,6 +52,8 @@ const Login = () => {
     } catch (err) {
       console.error(err);
       setError("Login failed. Check credentials.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -52,17 +62,36 @@ const Login = () => {
       <div className="auth-container">
         <h2>Welcome Back</h2>
         {error && <p className="error-message">{error}</p>}
-        <form onSubmit={handleLogin}>
-          <div className="input-group">
-            <label>Email Address</label>
-            <input type="email" value={email} onChange={e => setEmail(e.target.value)} required />
-          </div>
-          <div className="input-group">
-            <label>Password</label>
-            <input type="password" value={password} onChange={e => setPassword(e.target.value)} required />
-          </div>
-          <button type="submit" className="auth-btn">Login</button>
-        </form>
+
+        <div className="input-group">
+          <label>Email Address</label>
+          <input
+            type="email"
+            ref={emailRef}
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+          />
+        </div>
+
+        <div className="input-group">
+          <label>Password</label>
+          <input
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
+        </div>
+
+        <button
+          type="button"
+          className="auth-btn"
+          onClick={handleLogin}
+          disabled={loading}
+        >
+          {loading ? "Logging in..." : "Login"}
+        </button>
       </div>
     </div>
   );

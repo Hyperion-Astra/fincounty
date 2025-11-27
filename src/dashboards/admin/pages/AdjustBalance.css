@@ -5,3 +5,29 @@
 .msg { margin-top:12px; padding:10px; border-radius:8px; }
 .msg.success { background:#ecfdf5; color:#065f46; }
 .msg.error { background:#fff1f2; color:#9f1239; }
+.user-search-wrapper {
+  position: relative;
+}
+
+.search-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  right: 0;
+  background: white;
+  border: 1px solid #ddd;
+  max-height: 180px;
+  overflow-y: auto;
+  z-index: 10;
+  border-radius: 6px;
+}
+
+.dropdown-item {
+  padding: 10px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.dropdown-item:hover {
+  background: #f2f2f2;
+}

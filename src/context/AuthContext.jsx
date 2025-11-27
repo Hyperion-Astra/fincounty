@@ -17,6 +17,7 @@ export function AuthProvider({ children }) {
   const [currentUser, setCurrentUser] = useState(null);
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const isAdmin = userProfile?.role === "admin";
 
   useEffect(() => {
     let unsubscribeProfile = null;
@@ -78,6 +79,7 @@ export function AuthProvider({ children }) {
     () => ({
       currentUser,
       userProfile,
+      isAdmin,
       loading,
       register,
     }),

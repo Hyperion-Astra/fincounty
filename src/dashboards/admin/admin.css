@@ -171,3 +171,49 @@
   color: #fff;
   font-weight: 500;
 }
+/* SIDEBAR BASE */
+.admin-sidebar {
+  width: 260px;
+  background: #fff;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  padding: 20px;
+  transition: transform 0.3s ease;
+  z-index: 2000;
+}
+
+/* MOBILE: sidebar should be hidden by default */
+@media (max-width: 768px) {
+  .admin-sidebar {
+    transform: translateX(-100%);
+  }
+  .admin-sidebar.open {
+    transform: translateX(0);
+  }
+}
+
+/* BACKDROP */
+.admin-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.45);
+  backdrop-filter: blur(2px);
+  z-index: 1500;
+}
+
+/* HAMBURGER ICON */
+.admin-hamburger-btn {
+  display: none;
+  background: none;
+  border: none;
+  font-size: 28px;
+  padding: 8px;
+}
+
+@media (max-width: 768px) {
+  .admin-hamburger-btn {
+    display: block;
+  }
+}

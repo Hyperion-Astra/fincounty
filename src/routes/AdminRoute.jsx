@@ -9,7 +9,8 @@ export default function AdminRoute({ children }) {
 
   if (!currentUser || !userProfile) return <Navigate to="/login" replace />;
 
-  if (userProfile.role !== "admin") return <Navigate to="/dashboard" replace />;
+if (userProfile.role?.toLowerCase() !== "admin")
+  return <Navigate to="/dashboard" replace />;
 
   return children;
 }
