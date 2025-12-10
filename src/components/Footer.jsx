@@ -14,6 +14,7 @@ export default function Footer() {
             <Link to="/personal/savings">Savings</Link>
             <Link to="/personal/loans">Loans</Link>
             <Link to="/mortgage/mortgage-options">Mortgages</Link>
+            <Link to="/contact">Contact Us</Link>
           </div>
 
           <div className="ft-col">

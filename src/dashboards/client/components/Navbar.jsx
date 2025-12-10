@@ -16,7 +16,7 @@ export default function Navbar() {
 
   return (
     <nav className="nav">
-      <div className="brand">FinCountyBank</div>
+      <div className="brand">FinCounty</div>
       <div className="nav-right">
         <div className="user">{currentUser?.displayName || currentUser?.email}</div>
         <button className="link-btn" onClick={doLogout}>Sign out</button>

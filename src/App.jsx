@@ -79,7 +79,6 @@ import PendingTransactions from "./dashboards/admin/pages/PendingTransactions";
 import AdjustBalance from "./dashboards/admin/pages/AdjustBalance"
 import KYCApprovals from "./dashboards/admin/pages/KYCApprovals";
 
-// 🔥 Wrapper so we can use useLocation outside Router
 function AppContent() {
   const location = useLocation();
   const hideLayout =

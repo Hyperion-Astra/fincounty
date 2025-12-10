@@ -152,3 +152,10 @@
 .logout-btn:hover {
   background-color: #e04344;
 }
+
+/* Prevent toggle button from covering content on mobile */
+@media (max-width: 900px) {
+  .client-main-area {
+    padding-top: 55px; /* matches toggle button height & spacing */
+  }
+}

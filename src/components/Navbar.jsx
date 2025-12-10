@@ -97,7 +97,7 @@ export default function Navbar() {
         {/* Logo */}
         <div className="nav-left">
           <Link to="/" className="nav-logo">
-            <span className="logo-bold">FinCounty</span>Bank
+            <span className="logo-bold">Fin</span>County
           </Link>
         </div>
 

@@ -54,8 +54,9 @@ export default function Contact() {
           <div className="info-item">
             <Mail size={20} />
             <div>
-              <h4>Email</h4>
+              <h4>Emails</h4>
               <p>support@fincounty.com</p>
+              <p>info@fincounty.com</p>
             </div>
           </div>
 
@@ -63,15 +64,16 @@ export default function Contact() {
             <Phone size={20} />
             <div>
               <h4>Phone</h4>
-              <p>+1 (404) 555-9210</p>
+              <p>+1 (203) 660-4327</p>
             </div>
           </div>
 
           <div className="info-item">
             <MapPin size={20} />
             <div>
-              <h4>Office Address</h4>
-              <p>340 Finance Blvd, California, USA</p>
+              <h4>Office Addresses</h4>
+              <p>47 Mason St, Greenwich, CT 06830, USA</p>
+              <p>Trg Republike 5, 1000 Ljubljana, Slovenia</p>
             </div>
           </div>
         </aside>

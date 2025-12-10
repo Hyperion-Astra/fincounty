@@ -1,5 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, useMemo } from "react";
 import { auth, db } from "../firebase";
+import { signOut } from "firebase/auth";
+
 import {
   onAuthStateChanged,
   createUserWithEmailAndPassword,
@@ -18,6 +20,7 @@ export function AuthProvider({ children }) {
   const [userProfile, setUserProfile] = useState(null);
   const [loading, setLoading] = useState(true);
   const isAdmin = userProfile?.role === "admin";
+  
 
   useEffect(() => {
     let unsubscribeProfile = null;
@@ -74,6 +77,9 @@ export function AuthProvider({ children }) {
     await setDoc(doc(db, "users", cred.user.uid), userDoc, { merge: true });
     return cred;
   };
+    const logout = () => {
+  return signOut(auth);
+};
 
   const value = useMemo(
     () => ({
@@ -81,6 +87,7 @@ export function AuthProvider({ children }) {
       userProfile,
       isAdmin,
       loading,
+      logout,
       register,
     }),
     [currentUser, userProfile, loading]

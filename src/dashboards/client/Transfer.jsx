@@ -10,6 +10,7 @@ import {
   addDoc,
   updateDoc,
   doc,
+  getDoc,
   serverTimestamp,
 } from "firebase/firestore";
 import "./Transfer.css";
@@ -19,8 +20,8 @@ export default function Transfer() {
   const uid = currentUser?.uid;
 
   // UI state
-  const [selectedType, setSelectedType] = useState("internal"); // internal | savings | international | wire | swift
-  const [fromType, setFromType] = useState("checking"); // checking | savings
+  const [selectedType, setSelectedType] = useState("internal");
+  const [fromType, setFromType] = useState("checking");
   const [amount, setAmount] = useState("");
   const [note, setNote] = useState("");
   const [loading, setLoading] = useState(false);
@@ -28,52 +29,49 @@ export default function Transfer() {
   const [balance, setBalance] = useState(0);
 
   // Fields that vary by transfer type
-  const [destAccountNumber, setDestAccountNumber] = useState(""); // for internal another customer's account #
-  const [recipientName, setRecipientName] = useState(""); // international/wire/swift
+  const [destAccountNumber, setDestAccountNumber] = useState("");
+  const [recipientName, setRecipientName] = useState("");
   const [recipientCountry, setRecipientCountry] = useState("");
   const [bankName, setBankName] = useState("");
   const [iban, setIban] = useState("");
   const [swiftCode, setSwiftCode] = useState("");
-  // Wire specific
   const [wireAccountNumber, setWireAccountNumber] = useState("");
   const [wireRouting, setWireRouting] = useState("");
   const [achRouting, setAchRouting] = useState("");
   const [bankAddress, setBankAddress] = useState("");
-  // SWIFT specific
   const [homeAddress, setHomeAddress] = useState("");
   const [transitNumber, setTransitNumber] = useState("");
   const [institutionNumber, setInstitutionNumber] = useState("");
 
-  // helper: parse numeric safely
   function parseAmount(v) {
-    const s = String(v).trim();
-    if (!s) return 0;
-    const cleaned = s.replace(/[^\d.]/g, "");
-    const parts = cleaned.split(".");
-    if (parts.length > 2) return NaN;
-    let whole = parts[0] || "0";
-    let frac = parts[1] || "";
-    if (frac.length > 2) frac = frac.slice(0, 2);
-    const composed = frac ? `${whole}.${frac}` : whole;
-    return Number(composed);
+    if (v === null || v === undefined) return NaN;
+    const str = String(v).trim();
+    if (str === "") return NaN;
+    const cleaned = str.replace(/,/g, "").replace(/[^\d.]/g, "");
+    const n = parseFloat(cleaned);
+    if (Number.isNaN(n)) return NaN;
+    return Math.round(n * 100) / 100;
   }
 
-  // Load source account balance (fromType)
+  // Load source account balance (checking or savings)
   useEffect(() => {
     if (!uid) return;
     let mounted = true;
+
     (async () => {
       try {
-        const q = query(
-          collection(db, "accounts"),
-          where("uid", "==", uid),
-          where("accountType", "==", fromType)
-        );
-        const snap = await getDocs(q);
+        const docRef = doc(db, "accounts", uid);
+        const snap = await getDoc(docRef);
+
         if (!mounted) return;
-        if (!snap.empty) {
-          const data = snap.docs[0].data();
-          setBalance(data.balance ?? 0);
+
+        if (snap.exists()) {
+          const data = snap.data();
+          const bal =
+            fromType === "checking"
+              ? data.checkingBalance || 0
+              : data.savingsBalance || 0;
+          setBalance(Number(bal));
         } else {
           setBalance(0);
         }
@@ -81,44 +79,42 @@ export default function Transfer() {
         console.error("Failed to load balance:", err);
       }
     })();
+
     return () => (mounted = false);
   }, [uid, fromType]);
 
-  // Reset feedback when type changes
   useEffect(() => {
     setFeedback(null);
   }, [selectedType]);
 
-  // Validation per type
   function validateFields(parsedAmount) {
     if (!uid) return "You must be logged in.";
     if (Number.isNaN(parsedAmount) || parsedAmount <= 0) return "Enter a valid amount.";
     if (parsedAmount > balance) return "Insufficient funds.";
 
-    // Type specific checks
     if (selectedType === "internal") {
       if (!destAccountNumber) return "Destination account number is required.";
       if (destAccountNumber.trim().length < 5) return "Enter a valid destination account number.";
     }
 
-    if (selectedType === "savings") {
-      // nothing extra: it moves between your own accounts
-    }
-
     if (selectedType === "international") {
       if (!recipientName) return "Recipient name is required.";
+      if (!recipientCountry) return "Recipient country is required.";
       if (!bankName) return "Bank name is required.";
-      if (!iban) return "IBAN ";
-      if (!swiftCode) return "SWIFT/BIC";
+      if (!bankAddress) return "Bank address is required.";
+      if (!homeAddress) return "Recipient home address is required.";
+      if (!iban) return "IBAN is required.";
+      if (!swiftCode) return "SWIFT/BIC is required.";
     }
 
     if (selectedType === "wire") {
       if (!recipientName) return "Account holder name is required.";
       if (!wireAccountNumber) return "Account number is required.";
       if (!wireRouting) return "Wire routing number is required.";
-      if (!achRouting) return "ACH routing number";
-      if (!bankName) return "Bank name";
+      if (!achRouting) return "ACH routing number is required.";
+      if (!bankName) return "Bank name is required.";
       if (!bankAddress) return "Bank address is required.";
+      if (!homeAddress) return "Recipient home address is required.";
     }
 
     if (selectedType === "swift") {
@@ -127,8 +123,8 @@ export default function Transfer() {
       if (!bankName) return "Bank name is required.";
       if (!bankAddress) return "Bank address is required.";
       if (!wireAccountNumber) return "Account number is required.";
-      if (!transitNumber) return "Transit number";
-      if (!institutionNumber) return "Institution number";
+      if (!transitNumber) return "Transit number is required.";
+      if (!institutionNumber) return "Institution number is required.";
       if (!swiftCode) return "SWIFT code is required.";
     }
 
@@ -138,6 +134,7 @@ export default function Transfer() {
   async function handleSubmit(e) {
     e.preventDefault();
     setFeedback(null);
+
     const amt = parseAmount(amount);
     const validationError = validateFields(amt);
     if (validationError) {
@@ -145,164 +142,122 @@ export default function Transfer() {
       return;
     }
 
+    const numericAmt = Number(amt);
     setLoading(true);
 
     try {
-      // Fetch source account doc
-      const qFrom = query(
-        collection(db, "accounts"),
-        where("uid", "==", uid),
-        where("accountType", "==", fromType)
-      );
-      const snapFrom = await getDocs(qFrom);
-      if (snapFrom.empty) throw new Error("Source account not found.");
-      const fromDoc = snapFrom.docs[0];
-      const fromData = fromDoc.data();
+      // Load user account doc
+      const accRef = doc(db, "accounts", uid);
+      const accSnap = await getDoc(accRef);
+      if (!accSnap.exists()) throw new Error("Account not found.");
+      const acc = accSnap.data();
 
-      if ((fromData.balance ?? 0) < amt) throw new Error("Insufficient funds.");
+      const sourceBalance =
+        fromType === "checking"
+          ? acc.checkingBalance
+          : acc.savingsBalance;
 
-      // Internal transfer to another FinBank user
+      if (sourceBalance < numericAmt) throw new Error("Insufficient funds.");
+
+      // Internal transfer
       if (selectedType === "internal") {
-        const qTo = query(collection(db, "accounts"), where("accountNumber", "==", destAccountNumber));
-        const snapTo = await getDocs(qTo);
+        let snapTo = await getDocs(
+          query(collection(db, "accounts"), where("checkingAccountNumber", "==", destAccountNumber))
+        );
+        if (snapTo.empty) {
+          snapTo = await getDocs(
+            query(collection(db, "accounts"), where("savingsAccountNumber", "==", destAccountNumber))
+          );
+        }
         if (snapTo.empty) throw new Error("Destination account not found.");
-        const toDoc = snapTo.docs[0];
 
-        // Create transaction (posted)
+        const toDoc = snapTo.docs[0];
+        const toData = toDoc.data();
+
         await addDoc(collection(db, "transactions"), {
           uid,
           type: "internal_transfer",
-          amount: amt,
-          fromAccount: fromData.accountNumber,
-          toAccount: toDoc.data().accountNumber,
+          amount: numericAmt,
+          fromAccount: fromType === "checking" ? acc.checkingAccountNumber : acc.savingsAccountNumber,
+          toAccount: toData.checkingAccountNumber || toData.savingsAccountNumber,
           status: "posted",
           note,
           createdAt: serverTimestamp(),
         });
 
         // Update balances
-        await updateDoc(doc(db, "accounts", fromDoc.id), { balance: (fromData.balance ?? 0) - amt });
-        await updateDoc(doc(db, "accounts", toDoc.id), { balance: (toDoc.data().balance ?? 0) + amt });
+        const updates = {};
+        if (fromType === "checking") updates.checkingBalance = sourceBalance - numericAmt;
+        else updates.savingsBalance = sourceBalance - numericAmt;
+
+        if (toData.checkingAccountNumber === destAccountNumber)
+          updates.checkingBalance = (toData.checkingBalance || 0) + numericAmt;
+        else
+          updates.savingsBalance = (toData.savingsBalance || 0) + numericAmt;
+
+        await updateDoc(accRef, updates);
+        await updateDoc(doc(db, "accounts", toDoc.id), updates);
 
         setFeedback({ type: "success", text: "Transfer completed — funds moved." });
       }
 
-      // Savings transfer between user's own accounts
+      // Savings transfer
       else if (selectedType === "savings") {
-        // find user's savings account
-        const qTo = query(
-          collection(db, "accounts"),
-          where("uid", "==", uid),
-          where("accountType", "==", "savings")
-        );
-        const snapTo = await getDocs(qTo);
-        if (snapTo.empty) throw new Error("Savings account not found.");
-        const toDoc = snapTo.docs[0];
+        const savingsBalance = acc.savingsBalance || 0;
+        const updates =
+          fromType === "checking"
+            ? { checkingBalance: sourceBalance - numericAmt, savingsBalance: savingsBalance + numericAmt }
+            : { savingsBalance: sourceBalance - numericAmt, checkingBalance: acc.checkingBalance + numericAmt };
 
         await addDoc(collection(db, "transactions"), {
           uid,
           type: "savings_transfer",
-          amount: amt,
-          fromAccount: fromData.accountNumber,
-          toAccount: toDoc.data().accountNumber,
+          amount: numericAmt,
+          fromAccount: fromType === "checking" ? acc.checkingAccountNumber : acc.savingsAccountNumber,
+          toAccount: fromType === "checking" ? acc.savingsAccountNumber : acc.checkingAccountNumber,
           status: "posted",
           note,
           createdAt: serverTimestamp(),
         });
 
-        await updateDoc(doc(db, "accounts", fromDoc.id), { balance: (fromData.balance ?? 0) - amt });
-        await updateDoc(doc(db, "accounts", toDoc.id), { balance: (toDoc.data().balance ?? 0) + amt });
-
+        await updateDoc(accRef, updates);
         setFeedback({ type: "success", text: "Moved to savings successfully." });
       }
 
-      // International transfer (pending review)
-      else if (selectedType === "international") {
-        await addDoc(collection(db, "transactions"), {
+      // International / Wire / SWIFT (pending)
+      else {
+        const transData = {
           uid,
-          type: "international_transfer",
-          amount: amt,
-          fromAccount: fromData.accountNumber,
-          details: {
-            recipientName,
-            recipientCountry,
-            bankName,
-            iban,
-            swiftCode,
-            purpose: note,
-          },
-          status: "pending_review",
+          amount: numericAmt,
+          fromAccount: fromType === "checking" ? acc.checkingAccountNumber : acc.savingsAccountNumber,
+          note,
           createdAt: serverTimestamp(),
-        });
+        };
 
-        // Deduct (hold) funds from source
-        await updateDoc(doc(db, "accounts", fromDoc.id), { balance: (fromData.balance ?? 0) - amt });
+        if (selectedType === "international") {
+          transData.type = "international_transfer";
+          transData.details = { recipientName, recipientCountry, bankName, bankAddress, homeAddress, iban, swiftCode, purpose: note };
+        } else if (selectedType === "wire") {
+          transData.type = "wire_transfer";
+          transData.details = { accountHolder: recipientName, accountNumber: wireAccountNumber, wireRouting, achRouting, bankName, bankAddress, homeAddress, note };
+        } else if (selectedType === "swift") {
+          transData.type = "swift_transfer";
+          transData.details = { accountHolder: recipientName, homeAddress, bankName, bankAddress, accountNumber: wireAccountNumber, transitNumber, institutionNumber, swiftCode, note };
+        }
+
+        await addDoc(collection(db, "transactions"), { ...transData, status: "pending_review" });
+        const updates = fromType === "checking"
+          ? { checkingBalance: sourceBalance - numericAmt }
+          : { savingsBalance: sourceBalance - numericAmt };
+        await updateDoc(accRef, updates);
 
         setFeedback({
           type: "info",
-          text: "International transfer requested — pending review. Processing typically takes 1–3 business days.",
+          text: `${selectedType.charAt(0).toUpperCase() + selectedType.slice(1)} transfer requested — pending review. Processing typically takes 1–3 business days.`,
         });
       }
 
-      // Wire transfer (pending review)
-      else if (selectedType === "wire") {
-        await addDoc(collection(db, "transactions"), {
-          uid,
-          type: "wire_transfer",
-          amount: amt,
-          fromAccount: fromData.accountNumber,
-          details: {
-            accountHolder: recipientName,
-            accountNumber: wireAccountNumber,
-            wireRouting,
-            achRouting,
-            bankName,
-            bankAddress,
-            note,
-          },
-          status: "pending_review",
-          createdAt: serverTimestamp(),
-        });
-
-        await updateDoc(doc(db, "accounts", fromDoc.id), { balance: (fromData.balance ?? 0) - amt });
-
-        setFeedback({
-          type: "info",
-          text: "Wire transfer requested — pending review. Processing typically takes 1–3 business days.",
-        });
-      }
-
-      // SWIFT transfer (pending review)
-      else if (selectedType === "swift") {
-        await addDoc(collection(db, "transactions"), {
-          uid,
-          type: "swift_transfer",
-          amount: amt,
-          fromAccount: fromData.accountNumber,
-          details: {
-            accountHolder: recipientName,
-            homeAddress,
-            bankName,
-            bankAddress,
-            accountNumber: wireAccountNumber,
-            transitNumber,
-            institutionNumber,
-            swiftCode,
-            note,
-          },
-          status: "pending_review",
-          createdAt: serverTimestamp(),
-        });
-
-        await updateDoc(doc(db, "accounts", fromDoc.id), { balance: (fromData.balance ?? 0) - amt });
-
-        setFeedback({
-          type: "info",
-          text: "SWIFT transfer requested — pending review. Processing typically takes 1–3 business days.",
-        });
-      }
-
-      // reset form state (keep selectedType to make repeat transfers easier)
+      // Reset form
       setAmount("");
       setDestAccountNumber("");
       setRecipientName("");
@@ -326,7 +281,6 @@ export default function Transfer() {
     }
   }
 
-  // Card definitions for UI (emojis keep it dependency-free)
   const cards = [
     { id: "internal", label: "Internal", icon: "🔁", hint: "FinBank customer" },
     { id: "savings", label: "Savings", icon: "💰", hint: "Move to your savings" },
@@ -364,8 +318,7 @@ export default function Transfer() {
           </select>
         </div>
 
-        {/* --- conditional fields per transfer type --- */}
-
+        {/* Conditional fields per type */}
         {selectedType === "internal" && (
           <>
             <div className="row">
@@ -388,123 +341,49 @@ export default function Transfer() {
 
         {selectedType === "international" && (
           <>
-            <div className="row">
-              <label>Recipient Full Name</label>
-              <input value={recipientName} onChange={(e) => setRecipientName(e.target.value)} disabled={loading} />
-            </div>
-
-            <div className="row">
-              <label>Recipient Country</label>
-              <input value={recipientCountry} onChange={(e) => setRecipientCountry(e.target.value)} disabled={loading} />
-            </div>
-
-            <div className="row">
-              <label>Bank Name</label>
-              <input value={bankName} onChange={(e) => setBankName(e.target.value)} disabled={loading} />
-            </div>
-
-            <div className="row">
-              <label>IBAN</label>
-              <input value={iban} onChange={(e) => setIban(e.target.value)} disabled={loading} />
-            </div>
-
-            <div className="row">
-              <label>SWIFT / BIC</label>
-              <input value={swiftCode} onChange={(e) => setSwiftCode(e.target.value)} disabled={loading} />
-            </div>
+            <div className="row"><label>Recipient Full Name</label><input value={recipientName} onChange={(e) => setRecipientName(e.target.value)} disabled={loading} /></div>
+            <div className="row"><label>Recipient Country</label><input value={recipientCountry} onChange={(e) => setRecipientCountry(e.target.value)} disabled={loading} /></div>
+            <div className="row"><label>Bank Name</label><input value={bankName} onChange={(e) => setBankName(e.target.value)} disabled={loading} /></div>
+            <div className="row"><label>Bank Address</label><input value={bankAddress} onChange={(e) => setBankAddress(e.target.value)} disabled={loading} /></div>
+            <div className="row"><label>Recipient Home Address</label><input value={homeAddress} onChange={(e) => setHomeAddress(e.target.value)} disabled={loading} /></div>
+            <div className="row"><label>IBAN</label><input value={iban} onChange={(e) => setIban(e.target.value)} disabled={loading} /></div>
+            <div className="row"><label>SWIFT / BIC</label><input value={swiftCode} onChange={(e) => setSwiftCode(e.target.value)} disabled={loading} /></div>
           </>
         )}
 
         {selectedType === "wire" && (
           <>
-            <div className="row">
-              <label>Account Holder</label>
-              <input value={recipientName} onChange={(e) => setRecipientName(e.target.value)} disabled={loading} />
-            </div>
-
-            <div className="row">
-              <label>Account Number</label>
-              <input value={wireAccountNumber} onChange={(e) => setWireAccountNumber(e.target.value)} disabled={loading} />
-            </div>
-
+            <div className="row"><label>Account Holder</label><input value={recipientName} onChange={(e) => setRecipientName(e.target.value)} disabled={loading} /></div>
+            <div className="row"><label>Account Number</label><input value={wireAccountNumber} onChange={(e) => setWireAccountNumber(e.target.value)} disabled={loading} /></div>
             <div className="two-cols">
-              <div>
-                <label>Wire Routing #</label>
-                <input value={wireRouting} onChange={(e) => setWireRouting(e.target.value)} disabled={loading} />
-              </div>
-              <div>
-                <label>ACH Routing #</label>
-                <input value={achRouting} onChange={(e) => setAchRouting(e.target.value)} disabled={loading} />
-              </div>
+              <div><label>Wire Routing #</label><input value={wireRouting} onChange={(e) => setWireRouting(e.target.value)} disabled={loading} /></div>
+              <div><label>ACH Routing #</label><input value={achRouting} onChange={(e) => setAchRouting(e.target.value)} disabled={loading} /></div>
             </div>
-
-            <div className="row">
-              <label>Bank Name</label>
-              <input value={bankName} onChange={(e) => setBankName(e.target.value)} disabled={loading} />
-            </div>
-
-            <div className="row">
-              <label>Bank Address</label>
-              <input value={bankAddress} onChange={(e) => setBankAddress(e.target.value)} disabled={loading} />
-            </div>
+            <div className="row"><label>Bank Name</label><input value={bankName} onChange={(e) => setBankName(e.target.value)} disabled={loading} /></div>
+            <div className="row"><label>Bank Address</label><input value={bankAddress} onChange={(e) => setBankAddress(e.target.value)} disabled={loading} /></div>
+            <div className="row"><label>Recipient Home Address</label><input value={homeAddress} onChange={(e) => setHomeAddress(e.target.value)} disabled={loading} /></div>
           </>
         )}
 
         {selectedType === "swift" && (
           <>
-            <div className="row">
-              <label>Account Holder</label>
-              <input value={recipientName} onChange={(e) => setRecipientName(e.target.value)} disabled={loading} />
-            </div>
-
-            <div className="row">
-              <label>Home Address</label>
-              <input value={homeAddress} onChange={(e) => setHomeAddress(e.target.value)} disabled={loading} />
-            </div>
-
-            <div className="row">
-              <label>Bank Name</label>
-              <input value={bankName} onChange={(e) => setBankName(e.target.value)} disabled={loading} />
-            </div>
-
-            <div className="row">
-              <label>Bank Address</label>
-              <input value={bankAddress} onChange={(e) => setBankAddress(e.target.value)} disabled={loading} />
-            </div>
-
-            <div className="row">
-              <label>Account Number</label>
-              <input value={wireAccountNumber} onChange={(e) => setWireAccountNumber(e.target.value)} disabled={loading} />
-            </div>
-
+            <div className="row"><label>Account Holder</label><input value={recipientName} onChange={(e) => setRecipientName(e.target.value)} disabled={loading} /></div>
+            <div className="row"><label>Home Address</label><input value={homeAddress} onChange={(e) => setHomeAddress(e.target.value)} disabled={loading} /></div>
+            <div className="row"><label>Bank Name</label><input value={bankName} onChange={(e) => setBankName(e.target.value)} disabled={loading} /></div>
+            <div className="row"><label>Bank Address</label><input value={bankAddress} onChange={(e) => setBankAddress(e.target.value)} disabled={loading} /></div>
+            <div className="row"><label>Account Number</label><input value={wireAccountNumber} onChange={(e) => setWireAccountNumber(e.target.value)} disabled={loading} /></div>
             <div className="two-cols">
-              <div>
-                <label>Transit Number</label>
-                <input value={transitNumber} onChange={(e) => setTransitNumber(e.target.value)} disabled={loading} />
-              </div>
-              <div>
-                <label>Institution Number</label>
-                <input value={institutionNumber} onChange={(e) => setInstitutionNumber(e.target.value)} disabled={loading} />
-              </div>
+              <div><label>Transit Number</label><input value={transitNumber} onChange={(e) => setTransitNumber(e.target.value)} disabled={loading} /></div>
+              <div><label>Institution Number</label><input value={institutionNumber} onChange={(e) => setInstitutionNumber(e.target.value)} disabled={loading} /></div>
             </div>
-
-            <div className="row">
-              <label>SWIFT / BIC</label>
-              <input value={swiftCode} onChange={(e) => setSwiftCode(e.target.value)} disabled={loading} />
-            </div>
+            <div className="row"><label>SWIFT / BIC</label><input value={swiftCode} onChange={(e) => setSwiftCode(e.target.value)} disabled={loading} /></div>
           </>
         )}
 
         {/* Amount & note */}
         <div className="row">
           <label>Amount (USD)</label>
-          <input
-            type="number"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            inputMode="decimal"
-            disabled={loading}
-          />
+          <input type="number" value={amount} onChange={(e) => setAmount(e.target.value)} inputMode="decimal" disabled={loading} />
         </div>
 
         <div className="row">
@@ -513,9 +392,7 @@ export default function Transfer() {
         </div>
 
         <div className="actions">
-          <button type="submit" disabled={loading}>
-            {loading ? "Processing..." : "Submit Transfer"}
-          </button>
+          <button type="submit" disabled={loading}>{loading ? "Processing..." : "Submit Transfer"}</button>
         </div>
 
         {feedback && <p className={`msg ${feedback.type}`}>{feedback.text}</p>}
