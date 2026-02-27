@@ -64,119 +64,93 @@
 }
 
 .transactions-wrapper {
-  overflow-x: auto;
+  background: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  overflow: hidden;
 }
 
 /* TABLE */
 .transactions-table {
   width: 100%;
   border-collapse: collapse;
-  background: #ffffff;
-  border-radius: 12px;
-  overflow: hidden;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
 }
 
-.transactions-table th,
-.transactions-table td {
-  padding: 1rem 1.2rem;
-  text-align: left;
-  border-bottom: 1px solid #eef0f4;
-  font-size: 0.95rem;
+.transactions-table thead {
+  background: #f4f7fb;
 }
 
 .transactions-table th {
-  background: #f9fafc;
-  color: #555;
+  padding: 1rem 1.2rem;
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #6b7280;
   font-weight: 600;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.transactions-table td {
+  padding: 1.1rem 1.2rem;
+  font-size: 0.95rem;
+  border-bottom: 1px solid #f1f3f6;
+  color: #1f2937;
 }
 
 /* ROW HOVER */
-.transactions-table tr:hover {
+.transactions-table tbody tr {
+  transition: background 0.2s ease;
+}
+
+.transactions-table tbody tr:hover {
   background: #f3f8ff;
 }
 
-/* STATUS BADGES */
-.status {
+/* AMOUNT STYLING */
+.amount {
   font-weight: 600;
-  padding: 0.35rem 0.7rem;
-  border-radius: 8px;
-  text-transform: capitalize;
+}
+
+.amount.positive {
+  color: #0f9d58; /* subtle premium green */
+}
+
+.amount.negative {
+  color: #d93025; /* subtle premium red */
+}
+
+/* STATUS */
+.status {
+  font-weight: 500;
   font-size: 0.85rem;
-}
-
-.status.success {
-  background: #e6f9ee;
-  color: #0f9146;
-}
-
-.status.pending {
-  background: #fff7e6;
-  color: #c07f00;
-}
-
-.status.failed {
-  background: #ffecec;
-  color: #d64545;
-}
-
-/* NO TRANSACTION MESSAGE */
-.no-tx {
-  padding: 1rem;
-  text-align: center;
-  color: #777;
-  margin-top: 1rem;
-  font-size: 0.95rem;
+  color: #3a7afe;
 }
 
 /* MOBILE RESPONSIVENESS */
 @media (max-width: 768px) {
-  .dashboard-container {
-    padding: 1.3rem;
-  }
 
-  .greeting {
-    font-size: 1.5rem;
-  }
-
-  .balances {
-    gap: 1rem;
-  }
-
-  .balance-card {
-    padding: 1.2rem;
+  .transactions-table th:nth-child(2),
+  .transactions-table td:nth-child(2) {
+    display: none; /* hide long Type column on tablet */
   }
 
   .transactions-table th,
   .transactions-table td {
-    padding: 0.8rem 0.9rem;
+    padding: 0.85rem;
     font-size: 0.85rem;
   }
 }
 
 @media (max-width: 480px) {
-  .balance-card p {
-    font-size: 1.3rem;
-  }
 
-  .transactions-table {
-    font-size: 0.8rem;
+  .transactions-table th:nth-child(4),
+  .transactions-table td:nth-child(4) {
+    display: none; /* hide status on very small screens */
   }
 
   .transactions-table th,
   .transactions-table td {
     padding: 0.7rem;
-  }
-}
-
-/* SMOOTH FADE-IN */
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
+    font-size: 0.8rem;
   }
 }

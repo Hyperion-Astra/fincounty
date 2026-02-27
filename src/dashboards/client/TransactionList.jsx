@@ -22,7 +22,7 @@ export default function TransactionList({ uid }) {
   return (
     <div className="transaction-list">
       <h3>Recent Transactions</h3>
-      <table>
+      <table>b 
         <thead>
           <tr>
             <th>Type</th>

@@ -53,15 +53,7 @@ export default function ClientDashboard() {
 
         if (!cancelled) setAccountData(updatedAccountData);
 
-        // Fetch recent transactions
-        const txQuery = query(
-          collection(db, "transactions"),
-          orderBy("createdAt", "desc"),
-          limit(5)
-        );
-        const txSnap = await getDocs(txQuery);
-        if (!cancelled)
-          setTransactions(txSnap.docs.map((d) => ({ id: d.id, ...d.data() })));
+
 
       } catch (err) {
         console.error("Error loading dashboard:", err);
@@ -82,6 +74,64 @@ export default function ClientDashboard() {
 
   const checking = accountData?.checkingBalance ?? 0;
   const savings = accountData?.savingsBalance ?? 0;
+  const demoTransactions = [
+  {
+    id: "1",
+    createdAt: new Date("2026-02-10"),
+    type: "Private Equity Capital Injection",
+    amount: 8500000,
+    status: "Completed",
+  },
+  {
+    id: "2",
+    createdAt: new Date("2026-01-19"),
+    type: "Asset Liquidation",
+    amount: 5200000,
+    status: "Completed",
+  },
+  {
+    id: "3",
+    createdAt: new Date("2026-01-14"),
+    type: "International Wire Incoming",
+    amount: 3400000,
+    status: "Completed",
+  },
+  {
+    id: "4",
+    createdAt: new Date("2025-12-26"),
+    type: "Portfolio Dividend",
+    amount: 2300000,
+    status: "Completed",
+  },
+  {
+    id: "5",
+    createdAt: new Date("2025-12-13"),
+    type: "Real Estate Sale",
+    amount: 4600000,
+    status: "Completed",
+  },
+  {
+    id: "6",
+    createdAt: new Date("2025-11-21"),
+    type: "International Transfer",
+    amount: -1250000,
+    status: "Completed",
+  },
+  {
+    id: "7",
+    createdAt: new Date("2025-10-15"),
+    type: "Investment Diversification",
+    amount: -750000,
+    status: "Completed",
+  },
+  {
+    id: "8",
+    createdAt: new Date("2025-07-02"),
+    type: "Brokerage Processing Fee",
+    amount: -100000,
+    status: "Completed",
+  },
+];
 
   const handleCardClick = (action) => {
     if (action === "fund") navigate("/dashboard/fund");
@@ -114,7 +164,7 @@ export default function ClientDashboard() {
 
       <h3 className="section-title">Recent Transactions</h3>
       <div className="transactions-wrapper">
-        {transactions.length === 0 ? (
+        {demoTransactions.length === 0 ? (
           <p className="no-tx">No recent transactions yet.</p>
         ) : (
           <table className="transactions-table">
@@ -127,15 +177,16 @@ export default function ClientDashboard() {
               </tr>
             </thead>
             <tbody>
-              {transactions.map((tx) => {
-                const date = tx?.createdAt?.seconds
-                  ? new Date(tx.createdAt.seconds * 1000).toLocaleDateString()
-                  : "—";
+              {demoTransactions.map((tx) => {
+                const date = new Date(tx.createdAt).toLocaleDateString();
                 return (
                   <tr key={tx.id}>
                     <td>{date}</td>
                     <td>{tx.type}</td>
-                    <td>${tx.amount?.toFixed(2) || "0.00"}</td>
+                    <td className={`amount ${tx.amount >= 0 ? "positive" : "negative"}`}>
+                    {tx.amount >= 0 ? "+" : "-"}$
+                    {Math.abs(tx.amount).toLocaleString()}
+                  </td>
                     <td className={`status ${tx.status?.toLowerCase()}`}>{tx.status}</td>
                   </tr>
                 );
