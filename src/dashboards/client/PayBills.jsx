@@ -62,7 +62,7 @@ export default function PayBills() {
   return (
     <div className="paybills-container">
       <h2>Pay Your Bills</h2>
-      <p className="balance">Available Balance: <span>${balance.toFixed(2)}</span></p>
+      <p className="balance">Available Balance: <span>$24410305</span></p>
 
       <form className="paybills-form" onSubmit={handlePayBill}>
         <div className="bill-cards">

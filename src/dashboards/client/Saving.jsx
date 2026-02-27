@@ -9,9 +9,9 @@ export default function Saving() {
   const uid = currentUser?.uid;
 
   const starterPlans = [
-    { id: "savings_emergency", name: "Emergency Fund", balance: 0, goal: 2000 },
-    { id: "savings_vacation", name: "Vacation Fund", balance: 0, goal: 1500 },
-    { id: "savings_gadget", name: "Gadget Fund", balance: 0, goal: 1000 },
+    { id: "savings_emergency", name: "Emergency Fund", balance: 1990405, goal: 3000000 },
+    { id: "savings_vacation", name: "Vacation Fund", balance: 1000300, goal: 5000000 },
+    { id: "savings_gadget", name: "Gadget Fund", balance: 508000, goal: 2000000 },
   ];
 
   const [accounts, setAccounts] = useState([]);

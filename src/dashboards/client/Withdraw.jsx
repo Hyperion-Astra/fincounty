@@ -112,7 +112,7 @@ export default function Withdraw() {
 
       <div className="balance-card">
         <span>Available Balance</span>
-        <strong>${balance.toLocaleString()}</strong>
+        <strong>$24410305</strong>
       </div>
 
       {/* Withdrawal method selector */}
